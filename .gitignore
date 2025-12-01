@@ -3,20 +3,20 @@
 .godot/
 
 # Ignore library files but not the gdextension file
-demo/bin/*
-!demo/bin/android
-demo/bin/android/*
-!demo/bin/android/.gitkeep
-!demo/bin/linux
-demo/bin/linux/*
-!demo/bin/linux/.gitkeep
-!demo/bin/macos
-demo/bin/macos/*
-!demo/bin/macos/.gitkeep
-!demo/bin/windows
-demo/bin/windows/*
-!demo/bin/windows/.gitkeep
-!demo/bin/*.gdextension
+godot_project/bin/*
+!godot_project/bin/android
+godot_project/bin/android/*
+!godot_project/bin/android/.gitkeep
+!godot_project/bin/linux
+godot_project/bin/linux/*
+!godot_project/bin/linux/.gitkeep
+!godot_project/bin/macos
+godot_project/bin/macos/*
+!godot_project/bin/macos/.gitkeep
+!godot_project/bin/windows
+godot_project/bin/windows/*
+!godot_project/bin/windows/.gitkeep
+!godot_project/bin/*.gdextension
 .sconsign*.dblite
 
 # Ignore custom.py
@@ -53,6 +53,12 @@ compile_commands.json
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
+
+# Visual Studio
+.vs/
+
+# out/
+out/
 
 # Jetbrains
 .idea/

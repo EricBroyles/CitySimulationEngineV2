@@ -6,21 +6,21 @@
 #include <godot_cpp/godot.hpp>
 
 #include "example_class.h"
+#include "modify_img_update_tex.h"
 
 using namespace godot;
 
 void initialize_gdextension_types(ModuleInitializationLevel p_level)
 {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
-		return;
-	}
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
+	
 	GDREGISTER_CLASS(ExampleClass);
+	GDREGISTER_CLASS(ExpModifyImgUpdateTex)
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
-		return;
-	}
+	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
+	
 }
 
 extern "C"

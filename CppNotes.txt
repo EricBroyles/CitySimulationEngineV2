@@ -1,0 +1,19 @@
+Unresolved Problems:
+* how to have src use multiple folders? (yells at me a lot)
+* why is VS still mad at me about function missing for modify_img_update-tex.h  GDCLASS() probably a VS issue idk
+
+
+Common Issues
+* need semi colon at the end of class declarations but not functions :(
+* be sure to add the _bind_methods to header and actually inside the .cpp file (whoops) -- error is about _privete or smthng
+
+
+Things to try:
+0. Did you save it? AGH
+1. Delete the .vs folder in your project directory and restart Visual Studio.
+2. Delete the .obj files for each C++ script (hidden by default) in src and gen for the doc_data
+3. out/build/.. Might have somthing idk
+4. godot_project/bin/windows clear .dll (~ files are locked so close godot and VS and reopen to remove)
+5. bin/windows clear .dll
+
+

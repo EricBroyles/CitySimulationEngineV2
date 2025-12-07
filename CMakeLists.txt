@@ -48,9 +48,9 @@ add_library(${LIBNAME} SHARED)
 target_sources(${LIBNAME}
     PRIVATE
     src/register_types.cpp
-    src/register_types.h
-    src/example_class.cpp
-    src/example_class.h
+    
+    "src/example_class.cpp"
+    "src/example_class.h"
 )
 
 # Fetch a list of the xml files to use for documentation and add to our target

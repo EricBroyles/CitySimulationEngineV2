@@ -1,0 +1,145 @@
+[gd_scene load_steps=19 format=4 uid="uid://der2l77k01rau"]
+
+[ext_resource type="Script" uid="uid://hsaj0wg1em2x" path="res://scripts/user_interface.gd" id="1_o6xl0"]
+[ext_resource type="Script" uid="uid://bn60818lmerta" path="res://scripts/world.gd" id="2_tipki"]
+[ext_resource type="Shader" uid="uid://cevexmn1r7oqp" path="res://shaders/background.gdshader" id="3_85g3d"]
+[ext_resource type="Shader" uid="uid://c3ofxd0ntenxs" path="res://shaders/terrain_type.gdshader" id="4_choun"]
+[ext_resource type="Shader" uid="uid://b3jcx1lf5p27q" path="res://shaders/terrain_mod.gdshader" id="5_ya4ey"]
+[ext_resource type="Shader" uid="uid://cuvo4uwi10bqi" path="res://shaders/speed_mph.gdshader" id="6_eb6dy"]
+[ext_resource type="Shader" uid="uid://bk21hieywerp7" path="res://shaders/direction.gdshader" id="7_trceg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jkv2x"]
+shader = ExtResource("3_85g3d")
+shader_parameter/world_cell_size = Vector2i(0, 0)
+shader_parameter/px_per_cell = 0.0
+shader_parameter/px_position = Vector2(0, 0)
+shader_parameter/color1 = Vector3(0.647, 0.925, 0.588)
+shader_parameter/color2 = Vector3(0.475, 0.796, 0.408)
+shader_parameter/color3 = Vector3(0.255, 0.737, 0.157)
+shader_parameter/edge_fade_cells = 20
+shader_parameter/noise_scale = 0.15
+shader_parameter/noise_threshold = 0.5
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_o6xl0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jbj1t"]
+shader = ExtResource("4_choun")
+shader_parameter/color_map = PackedVector4Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/px_per_cell = 0.0
+shader_parameter/px_position = Vector2(0, 0)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_tipki"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_muem4"]
+shader = ExtResource("5_ya4ey")
+shader_parameter/px_per_cell = 0.0
+shader_parameter/px_position = Vector2(0, 0)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_85g3d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dp3eg"]
+shader = ExtResource("6_eb6dy")
+shader_parameter/px_per_cell = 0.0
+shader_parameter/px_position = Vector2(0, 0)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_choun"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ld40"]
+shader = ExtResource("7_trceg")
+shader_parameter/px_per_cell = 0.0
+shader_parameter/px_position = Vector2(0, 0)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ya4ey"]
+
+[node name="Main" type="Node2D"]
+
+[node name="UserInterface" type="CanvasLayer" parent="."]
+layer = 2
+script = ExtResource("1_o6xl0")
+
+[node name="Brush" type="ColorRect" parent="UserInterface"]
+unique_name_in_owner = true
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextDisplay" type="RichTextLabel" parent="UserInterface"]
+unique_name_in_owner = true
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 30.0
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_a8y0u")
+horizontal_alignment = 1
+
+[node name="CommandLine" type="LineEdit" parent="UserInterface"]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+caret_blink = true
+
+[node name="World" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_tipki")
+
+[node name="Background" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_jkv2x")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_o6xl0")
+
+[node name="TerrainType" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_jbj1t")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_tipki")
+
+[node name="TerrainMod" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_muem4")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_85g3d")
+
+[node name="SpeedMPH" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_dp3eg")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_choun")
+
+[node name="Direction" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_0ld40")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CanvasTexture_ya4ey")
+
+[connection signal="focus_entered" from="UserInterface/CommandLine" to="UserInterface" method="_on_command_line_focus_entered"]
+[connection signal="focus_exited" from="UserInterface/CommandLine" to="UserInterface" method="_on_command_line_focus_exited"]

@@ -4,3 +4,6 @@
 
 [node name="Node" type="Node"]
 script = ExtResource("1_gyk8m")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+unique_name_in_owner = true

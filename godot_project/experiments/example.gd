@@ -12,5 +12,6 @@ func _ready() -> void:
 	thing.make_stripes(img, tex)
 	sprite.texture = tex
 	
+	var sim: Simulation = Simulation.new()
 	
 	

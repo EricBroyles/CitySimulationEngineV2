@@ -16,6 +16,8 @@ EXAMPLE COMMANDS
 	erase brush(10) or brush(10,10)
 	erase -> brush defaults to 10,10
 	
+	sim test(1)
+	
 	
 CODE VARIABLE TERMINOLOGY
 	cmd: String = funcname paramname(param_group) paramname(param_group) ...
@@ -35,6 +37,9 @@ const FUNCNAMES_MAP: Dictionary = {
 	"view": "view",
 	"clear": "clear",
 	"help": "help",
+	"simtest": "simtest",
+	"sim": "sim",
+	"simulation": "sim",
 }
 
 const ERROR: String = "__ERROR__"
@@ -47,6 +52,7 @@ const TMC: String = "terrain_mod_color"
 const SMC: String = "speed_mph_color"
 const DIC: String = "direction_color"
 const BSH: String = "brush"
+const TST: String = "test"
 
 const BRUSH_CSIZE: Vector2i = Vector2i(10,10)
 
@@ -79,6 +85,11 @@ const ERASE_PARAMS_MAP: Dictionary = {
 	"brush": 		 ["brush",         BSH, V2i],
 }
 
+const SIMTEST_PARAMS_MAP: Dictionary = {
+	"t": 			["test", 		   TST, INT],
+	"test": 		["test", 		   TST, INT]
+}
+
 @onready var world: World = %World
 @onready var text_display: RichTextLabel = %TextDisplay
 @onready var cmdline: LineEdit = %CommandLine
@@ -93,6 +104,7 @@ var cmdline_focus: bool = false
 var cmd_history: Array[String] = [] 
 var cmd_history_idx: int = 0 
 var draw_struct: DrawStruct = DrawStruct.create_empty()
+var sim: Simulation = Simulation.new()
 
 func _ready() -> void:
 	reset()
@@ -111,6 +123,10 @@ func _input(_event: InputEvent) -> void:
 	
 func _unhandled_input(_event: InputEvent) -> void:
 	unhandled_move()
+	if not cmdline_focus and Input.is_action_just_released("space_bar"): 
+		if sim.is_valid() and not sim.is_done(): 
+			print("step")
+			sim.step()
 	
 func reset() -> void:
 	clear_cmdline()
@@ -238,13 +254,27 @@ func cmd_erase(brush_csize: Vector2i = BRUSH_CSIZE) -> void:
 	open_brush(new_draw_struct)
 	
 func cmd_view(options: Array[int]) -> void:
+	print(options)
 	pass
 	
 func cdm_clear(options: Array[int]) -> void:
+	print(options)
 	pass
 	
 func cmd_help() -> void:
 	pass
+	
+func cmd_simtest(test_option: int) -> void:
+	print("simtest test(%s)" % [test_option])
+	match test_option:
+		1: 
+			sim = Simulation.new()
+			sim.setup(10, 10, 10)
+			sim.set_world(world.terrain_type_img, world.terrain_mod_img, world.direction_img, world.speed_mph_img)
+			sim.set_agents(1000, .5)
+			
+	
+	
 	
 """
 COMMAND PARAMS: get_%s_params
@@ -285,6 +315,19 @@ func get_erase_params(params_tokens: PackedStringArray) -> Array:
 			BSH: bsh = call("extract_%s" % [BSH], extract_param_group(param_token))  
 	
 	return [bsh]
+	
+func get_simtest_params(params_tokens: PackedStringArray) -> Array:
+	var test_option: int = -1
+	for param_token in params_tokens:
+		var paramname: String = extract_paramname(param_token)
+		if SIMTEST_PARAMS_MAP.has(paramname): paramname = SIMTEST_PARAMS_MAP[paramname][ACTUAL_PARAMNAME]
+		else: return make_error("no matching paramnames in SIMTEST_PARAMS_MAP [%s]" % [paramname])
+		
+		match SIMTEST_PARAMS_MAP[paramname][PARAMNAME_TYPE]:
+			TST: test_option = call("extract_%s" % [TST], extract_param_group(param_token))
+	return [test_option]
+		
+	
 	
 """
 ERRORS RESOURCES
@@ -350,4 +393,11 @@ func extract_brush(param_group: PackedStringArray) -> Vector2i:
 	if param_group.size() == 2: return Vector2i(param_group[0].to_int(), param_group[1].to_int())
 	if param_group.size() == 1: return Vector2i.ONE * param_group[0].to_int()
 	return BRUSH_CSIZE
+	
+func extract_test(param_group: PackedStringArray) -> int:
+	# param group ["int"]
+	# returns int or -1 if invalid
+	if len(param_group) == 0: return  -1
+	return param_group[0].to_int()
+	
 	

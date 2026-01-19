@@ -1,0 +1,378 @@
+
+godot -> C++, how to handle globals/importing world instance
+speed = cells per step
+distance = cells
+ig_sec_per_step
+ig_cell_len = 10ft
+mph -> speed: mph (5280ft/1mi) (1 cell/ig_cell_len ft) (60 min/1hr) (60sec/min) (1/ig_sec_per_step)
+
+
+Example Use:
+sim = Simulation.create(...)
+sim.populate(...)
+sim.set_destinations(...)
+sim.set_nav_opts(...)
+sim.set_paths(...)
+user input -> if not sim.is_done():
+    sim.step()
+
+
+
+class Simulation
+    private ig_run_sec: int
+    private ig_sec_per_step: int
+    private ig_cell_len: int
+    private step: int
+    private num_steps: int
+    private world: World
+    private agents: Agents
+
+    public create(tt,tm,dir,mph,ig_runtime,ig_sec_per_step,ig_cell_len, agents_texture_rect) -> Simulation:
+        ig_runtime
+        ig_sec_per_step
+        step = 0
+        num_steps = ig_run_sec / ig_sec_per_step
+        world = World.create(tt,tm,dir,mph)
+    public populate(num_humans,car_ownership_rate) -> void:
+        agents = Agents.populate(num_humans,car_ownership_rate)
+        agents.set_destinations()
+        agents.set_navseqs()
+        # agents.set_paths()  ### when do I want to do this. path needs to be created multiple times when I go, path to next target allowed by navseq
+    public is_done() -> bool:
+        return step >= num_steps
+    public step() -> void:
+        agents.step()
+
+        
+
+class World (GLOBAL)
+    public enum TT: {NONE, ROAD, WALKWAY, CROSSWALK, PARKING, BUILDING, BARRIER, MAX}
+    public enum TM: {NONE, JUNCTION_STOP, JUNCTION1, JUNCTION2, JUNCTION3, LANE_DIVIDER, MAX}
+    public INVALID_CELL: Vector2i = Vector2i(-1,-1)
+    public INVALID_CMID: int = -1
+    #id = group_id
+    private tt: Image
+    private tm: Image
+    private dir: Image
+    private mph: Image
+    private speed: matrix
+    private walk_cm: 2D matrix
+    private drive_cm: 2D matrix
+    private parking: Parking
+    private avg_walk_speed: [Vector2i(walk_cm_id, avg_speed), ...] (no make this a dictoinary)
+    private avg_drive_speed: [Vector2i(drive_cm_id, avg_speed), ...] (no make this a dictoinary)
+
+    public create(tt,tm,dir,mph) -> World:
+        tt,tm,dir,mph
+        set_walk_connectivity_matrix
+        set_drive_connectivity_matrix
+        set_parking
+    public shape() -> Vector2i
+    public in_bounds(cell: Vector2i) -> bool:
+    public get_lower_resolution_cell(cell: Vector2i, resolution: int) -> Vector2i
+        # ex: (1,1), 16 -> (0,0) # ex: (5,3), 4  -> (1,0)
+    public set_walk_connectivity_matrix() -> void:
+    public set_drive_connectivity_matrix() -> void:
+    public set_parking() -> void
+    public get_tt(c,r) -> int:
+    public get_tm(c,r) -> int:
+    public get_dir(c,r) -> {n: T/F, s: T/F, ...}:
+    public get_speed(c,r) -> int:
+    public get_rand_building_cell() -> Vector2i:
+    public get_rand_parking_cell() -> Vector2i:
+    public get_walk_cmid(cell1, cell2) -> int
+        World.get_cmid(walk_cm, cell1, cell2)
+    public get_drive_cmid(cell1, cell2) -> int:
+        World.get_cmid(drive_cmm cell1, cell2)
+    static private get_cmid(cm, cell1, cell2) -> int:
+        # -1 if not connected  
+        group_id1 = cm[cell1.x][cell1.y]
+        group_id2 = cm[cell2.y][cell2.y]
+        if group_id1 != group_id2 -> INVALID_CMID
+        return group_id1
+    #public can_walk(cell1, cell2) -> bool:
+        return World.is_connected(walk_cm, cell1, cell2)
+    #public can_drive(cell1, cell2) -> bool:
+        return World.is_connected(drive_cm, from_cell, to_cell)
+
+    public get_walk_eta(cell1, cell2, cmid: int) -> float:
+        dist = World.distance(cell1, cell2)
+        speed = avg_walk_speed[cmid]
+        return dist / speed
+    public get_drive_eta(cell1, cell2, cmid) -> float:
+        dist = World.distance(cell1, cell2)
+        speed = avg_drive_speed[cmid]
+        return dist / speed
+       
+    static public distance(from, to):
+    public get_avg_walk_speed(id):
+    public get_avg_drive_speed(id):
+
+
+
+class Parking:
+    private SEARCH_RADIUS_16x16 = 10
+    private SEARCH_RADIUS_4x4   = 16/2
+    private SEARCH_RADIUS_1x1   = 4/2
+    private num_spots_available: int
+    private available16x16: 2D matrix of int
+    private available4x4: 2D matrix of int
+    private reservations: unordered map{Vector2i: Agent}
+
+    public create() -> Parking:
+        give available16x16 and 4x4 the right size
+        for c,r in World.shape:
+            cell = Vector2i(c,r)
+            if World.get_tt(cell) is not World.TT.PARKING: continue
+            cell16x16 = get_lower_resolution_cell(cell, 16)
+            cell4x4   = get_lower_resolution_cell(cell, 4)
+            available16x16[cell16x16] += 1
+            available4x4[cell4x4] += 1
+            reservations[cell] = Agent.create_empty()
+            num_available = get_num_spots()
+
+    public get_num_spots() -> int:
+        reutrn len(reservations)
+
+    public clear_reservation(cell) -> void:
+        handle_reservation(Agent.create_empty, cell)
+
+    public set_reservation(agent, cell: Vector2i) -> void:
+        handle_reservation(agent, cell)
+
+    private handle_reservation(agent, cell) -> void:
+        # 1. agent = Empty | reservations at cell = Empty -> void
+        # 2. agent = Emtpy | reservations at cell = Agent -> increase num_spots_available, 16, 4, reservation
+        # 3. agent = Agent | reservations at cell = Empty -> decrese .,.,. reservation
+        # 4. agent = Agent | reservations at cell = Agent -> reservation
+        # 5. cell is not in reservation -> void
+
+        if cell is not in reservation -> void
+        reservation_delta = 0
+        current_agent = reservations[cell]
+        if agent is Emtpy and current_agent is Emtpy -> void
+        elif agent is Empty and current_agent is not Empty:
+            reservation[cell] = agent
+            reservation_delta += 1
+        elif agent is not Emtpy and current_agent is Emtpy:
+            reservation[cell] = agent
+            reservation_delta += 1
+       elif agent is not Emtpy and current_agent is not Empty:
+            reservation[cell] = agent
+       else: "if you get here somthing has gone wrong
+            return
+        if reservation_delta != 0:
+            cell16x16 = get_lower_resolution_cell(cell, 16)
+            cell4x4   = get_lower_resolution_cell(cell, 4)
+            available16x16[cell16x16] += reservation_delta
+            available4x4[cell4x4] += reservation_delta
+            num_spots_available += reservation_delta
+
+            
+    public get_reasonable_open_spot(cell: Vector2i) -> Vector2i:
+        # Vector2i(-1,-1) if none available
+        cell16x16 = World.get_lower_resolution_cell(cell, 16)
+        cell16x16 = Parking.radial_search(available16x16, cell16x16, SEARCH_RADIUS_16x16)
+        if cell16x16 is World.INVALID_CELL: return World.INVALID_CELL
+        # get the world cell at the center of cell16x16
+        cell4x4 = World.get_lower_resolution_cell(16*cell16x16 + Vector2i(8,8), 4)
+        cell4x4 = Parking.radial_search(available4x4, cell4x4, SEARCH_RADIUS_4x4)
+        if cell4x4 is World.INVALID_CELL: return World.INVALID_CELL
+        cell1x1 = World.rect_reservations_search(4*cell4x4, size=Vector2i(4,4))
+        return cell1x1
+
+    private static spots_available(available_matrix, cell) -> int
+        rows = len(available_matrix)
+        cols = len(available_matrix[0])
+        if search_cell is in bounds (using rows and cols and 0,0)
+        return available_matrix[cell.y][cell.x]
+
+    private static radial_availability_search(available_matrix, cell, search_radius = 1) -> Vector2i
+        # find the closest cell with spots available > 0
+        r = search_radius
+        #search_cell = cell
+        while r <= search_radius:
+            num_search_cells = 1 if r == 1 else 8*(r-1)
+            delta = Vector2i(r-1,-r+1)
+            square_length = 2*r-1
+            
+            for n in num_search_cells: #[0, num_search_cells)
+                search_cell = cell + delta
+                if Parking.spots_available(available_matrix, search_cell) > 0: return search_cell
+                #update the delta
+                if int((n+1) / square_length) == 0:
+                    delta += Vector2i(0, +1)
+                elif int((n+1) / square_length) == 1:
+                    delta += Vector2i(-1, 0)
+                elif int((n+1) / square_length) == 2:
+                    delta += Vector2i(0, -1)
+                elif int((n+1) / square_length) == 3:
+                    delta += Vector2i(+1, 0)
+            r += 1
+        return World.INVALID_CELL
+    
+    private rect_reservations_search(cell, size: Vector2i) -> Vector2i:
+        # not static
+        # used to find the closest 1x1 cell in a designated region. 
+        # cell is top left corner of rectangle, try and look in reservations at each spot, if Agent is Empty return that cell 
+        # if no empty spot found return World.INVALID_CELL
+
+
+
+class Agents:
+    private humans: Array[Humans]
+    private personal_vehicles: Array[PersonalVehicle]
+    private agents_img
+    private agents_tex
+    #private humans_img: 0 to 255 variation
+    #private personal_vehicle_img
+    #private draw_matrix: godot Image
+
+    public populate(num_humans, car_ownership_rate) -> Agents:
+        for num_humans:
+            human_cell = World.get_rand_building_cell
+            human = Human.create(human_cell)
+            if car_ownership_rate contraint is met: 
+                pv_cell = World.get_rand_parking_cell
+                pv = PersonalVehicle.create(pv_cell)
+                human.set_personal_vehicle(pv)
+                pv.set_human_owner(human)
+            add to arrays
+
+    public set_destinations() -> void:
+        for all humans:
+            human.set_destination(World.get_rand_building_cell)
+    public set_navseqs() -> void:
+        for all humans:
+            human.set_navseq()
+    public step() -> void:
+        for human in humans:
+            human.step()
+        for pv in personal_vehicles:
+            pv.step()
+        # draw them to the draw_matrix
+
+class Agent:
+    private cell: Vector2
+    private path: Path
+
+    public create_empty() -> Empty:
+        return Empty.create()
+    public create(cell: Vector2i) -> Agent
+    public get_cell()
+    public get_path():
+    public step() -> void:
+        ## CONTINUE
+        pass
+
+class Empty(Agent): ## DO NOT DO THIS. INSTEAD have a flag for all classes of is_emtpy and a create emtpy that way I can have a PersonalVehicle that is empty
+    public create() -> Empty:
+        return Empty.new()
+
+class Human(Agent):
+    enum NAVSEQ {NONE, WALK, PERSONAL_VEHICLE}
+    private DRIVE_PREFERENCE = .9 # 1 is no preference .9 is lower preference
+    private destination_cell: Vector2i = World.INVALID_CELL
+    private personal_vehicle: PersonalVehicle = Agent.EWmpty() (THIS WONT WORK CANNOT ASSIGNE EMTPY TO THIS)
+    private navseq: int = NONE
+
+    public set_personal_vehicle(personal_vehicle) -> void:
+    public set_destination(cell: Vector2i) -> void:
+    public set_navseq(ns: int = -1) -> void:
+        if ns == -1: navseq = choose_navseq() return
+        else: navseq = ns return
+    private choose_navseq() -> int:
+        navseq_choice = NONE
+        wcell1 = cell
+        wcell2 = destination_cell
+        wcmid = get_walk_cmid(wcell1, wcell2)
+        if wcmid != World.INVALID_CMID: navseq_choice = WALK
+        if personal_vehicle is Empty: return navseq_choice
+        dcell1 = personal_vehicle.get_cell()
+        dcell2 = World.parking.get_reasonable_open_spot(wcell2)
+        dcmid = get_drive_cmid(dcell1, dcell2)
+        if dcmid == World.INVALID_CMID: return navseq_choice
+        walk_eta = World.get_walk_eta(wcell1, wcell2, wcmid)
+        drive_eta = World.get_drive_eta(dcell1, dcell2, dcmid)
+        if drive_eta * DRIVE_PREFERENCE < walk_eta: navseq_choice = DRIVE
+        return navseq_choice
+    public has_personal_vehicle() -> bool:
+        if personal_vehicle is Empty:
+    public step() -> void:
+        # if I am at my destination skip
+        # if inside a personal vehicle skip
+        # if path is empty -> create a path to next target self.get_next_target()
+        #  path.step(World.get_step_time, World.speed[cell])
+
+
+
+class PersonalVehicle(Agent):
+    private reserved_parking_cell
+    private human_owner: Human
+
+    public set_human_owner(human) -> void:
+    public set_reserved_parking(cell: Vector2i) -> void:
+    public step() -> void:
+        # if I am at a reserved_parking_cell: human_owner.exit_personal_vehicle(), skip
+        # if path is empty -> create a path using get_next_target()
+        # path.step(...)
+        
+
+class Path
+    private distance: float #cells
+    private progress: float #distance along path from 0 o 1
+    private nodes: array of size 128 Vector2i
+
+    public set_nodes() -> void
+    public set_progress() -> void
+    public get_nodes()
+    public get_progress()
+    public step(time: float, speed: float) -> void:
+        progress += time * speed / distance
+        if progress > 1: progress = 1
+
+    is_empty()
+
+
+
+
+
+
+Agents
+* Cell: position they are located
+* all ocupy only one cell
+* HUman: may own a car
+* Car: may have a owner
+* path: start, end, body (what gets a path)
+* Car does not know its end destination until the person gets to it??? its end destination is a reserved_parking space, th
+* state: navigating. none. loiter
+* when creating agents: just give them their starting position, path information comes latter
+* 
+
+Human:
+* has a destination (end cell)
+
+PersonalVehicle
+* has a parking space (end cell)
+     
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

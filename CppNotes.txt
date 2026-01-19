@@ -6,14 +6,29 @@ Unresolved Problems:
 Common Issues
 * need semi colon at the end of class declarations but not functions :(
 * be sure to add the _bind_methods to header and actually inside the .cpp file (whoops) -- error is about _privete or smthng
+* be sure to add #pragma once otherwise using namespace godot does not work...
 
 
 Things to try:
 0. Did you save it? AGH
+0.1 Restart Godot.
 1. Delete the .vs folder in your project directory and restart Visual Studio.
 2. Delete the .obj files for each C++ script (hidden by default) in src and gen for the doc_data
 3. out/build/.. Might have somthing idk
 4. godot_project/bin/windows clear .dll (~ files are locked so close godot and VS and reopen to remove)
 5. bin/windows clear .dll
 
+
+scons: Building targets ...
+scons: `godot-cpp\bin\libgodot-cpp.windows.template_debug.x86_64.lib' is up to date.
+scons: `bin\windows\CITYSIMULATIONENGINEV2.windows.template_debug.x86_64.dll' is up to date.
+scons: `godot_project\bin\windows\CITYSIMULATIONENGINEV2.windows.template_debug.x86_64.dll' is up to date.
+scons: `godot_project\bin\windows\CITYSIMULATIONENGINEV2.windows.template_debug.x86_64.lib' is up to date.
+scons: `godot_project\bin\windows\CITYSIMULATIONENGINEV2.windows.template_debug.x86_64.exp' is up to date.
+
+
+Quirks:
+* what a goofy language.
+* two ways to instatiate Cell() : x(px), y(px) {} init before constructor runs need for certain constants vs Cell() {x(px), y(px)}
+* Constructor Body (Assignment): If you omit the initializer list and assign values inside the constructor body, the members are first default-initialized (or go through their default constructors), and then the values are assigned. This can be less efficient as it involves two operations. 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://der2l77k01rau"]
+[gd_scene load_steps=20 format=4 uid="uid://der2l77k01rau"]
 
 [ext_resource type="Script" uid="uid://hsaj0wg1em2x" path="res://scripts/user_interface.gd" id="1_o6xl0"]
 [ext_resource type="Script" uid="uid://bn60818lmerta" path="res://scripts/world.gd" id="2_tipki"]
@@ -53,6 +53,8 @@ shader_parameter/px_per_cell = 0.0
 shader_parameter/px_position = Vector2(0, 0)
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_ya4ey"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_eb6dy"]
 
 [node name="Main" type="Node2D"]
 
@@ -140,6 +142,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("CanvasTexture_ya4ey")
+
+[node name="Agents" type="TextureRect" parent="World"]
+unique_name_in_owner = true
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("CanvasTexture_eb6dy")
 
 [connection signal="focus_entered" from="UserInterface/CommandLine" to="UserInterface" method="_on_command_line_focus_entered"]
 [connection signal="focus_exited" from="UserInterface/CommandLine" to="UserInterface" method="_on_command_line_focus_exited"]

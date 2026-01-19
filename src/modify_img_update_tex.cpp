@@ -3,6 +3,7 @@
 
 void ExpModifyImgUpdateTex::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("make_stripes", "img", "tex"), &ExpModifyImgUpdateTex::make_stripes);
+    
 }
 
 void ExpModifyImgUpdateTex::make_stripes(Ref<Image> img, Ref<ImageTexture> tex) {

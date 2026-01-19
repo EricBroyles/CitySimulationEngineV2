@@ -7,6 +7,7 @@
 
 #include "example_class.h"
 #include "modify_img_update_tex.h"
+#include "simulation.h"
 
 using namespace godot;
 
@@ -15,7 +16,9 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
 	
 	GDREGISTER_CLASS(ExampleClass);
-	GDREGISTER_CLASS(ExpModifyImgUpdateTex)
+	GDREGISTER_CLASS(ExpModifyImgUpdateTex);
+	GDREGISTER_CLASS(Simulation);
+
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

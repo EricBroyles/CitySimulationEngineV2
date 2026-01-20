@@ -9,7 +9,6 @@
 using namespace godot;
 
 class Agents {
-
 private:  
     bool valid;
     const World& world;
@@ -24,8 +23,10 @@ public:
     Agents();
     Agents(const World& world, int num_humans, float personal_vehicle_ownership);
     ~Agents();
+    bool is_valid() const { return valid; }
     void set_destinations();
     void set_navseqs();
-    void step();
     Ref<Image> get_agents_img() const;
+    void step();
+    
 };

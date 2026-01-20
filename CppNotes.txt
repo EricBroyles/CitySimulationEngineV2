@@ -32,3 +32,13 @@ Quirks:
 * two ways to instatiate Cell() : x(px), y(px) {} init before constructor runs need for certain constants vs Cell() {x(px), y(px)}
 * Constructor Body (Assignment): If you omit the initializer list and assign values inside the constructor body, the members are first default-initialized (or go through their default constructors), and then the values are assigned. This can be less efficient as it involves two operations. 
 
+
+
+
+constructors
+destructors
+is_valid
+setters
+getters
+stuff
+operations

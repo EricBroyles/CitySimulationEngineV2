@@ -1,8 +1,8 @@
 #pragma once
 
 #include <godot_cpp/classes/image.hpp>
-#include "agents.h"
-#include "world.h"
+#include "dev/agents.h"
+#include "dev/world.h"
 
 using namespace godot;
 
@@ -42,12 +42,11 @@ protected:
 public: 
     Simulation();
     ~Simulation();
+    bool is_valid() const { return valid; }
     void setup(int step_duration, int cell_width, int num_steps);
     void set_world(const Ref<Image> tt, const Ref<Image> tm, const Ref<Image> dir, const Ref<Image> mph);
     void set_agents(int num_humans, float personal_vehicle_ownership);
-    bool is_valid() const;
-    bool is_done() const;
-    void step();
+    bool is_done() const { return current_step >= num_steps; }
     Ref<Image> get_agents_img();
-
+    void step();
 };

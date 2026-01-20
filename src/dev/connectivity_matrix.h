@@ -1,0 +1,4 @@
+class ConnectivityMatrix {
+    public:
+    private:
+}

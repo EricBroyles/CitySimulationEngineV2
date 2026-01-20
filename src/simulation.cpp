@@ -20,7 +20,8 @@ Simulation::Simulation():
     current_step(0), 
     num_steps(0), 
     world(World()), 
-    agents(Agents()) {}
+    agents(Agents()) 
+    {}
 
 Simulation::~Simulation() {
     //custom cleanup here
@@ -34,7 +35,7 @@ void Simulation::setup(int p_step_duration, int p_cell_width, int p_num_steps) {
 }
 
 void Simulation::set_world(const Ref<Image> tt, const Ref<Image> tm, const Ref<Image> dir, const Ref<Image> mph) {
-    world = World(tt, tm, dir, mph);
+    world = World(tt, tm, dir, mph, step_duration, cell_width);
 }
 
 void Simulation::set_agents(int num_humans, float personal_vehicle_ownership) {
@@ -43,12 +44,8 @@ void Simulation::set_agents(int num_humans, float personal_vehicle_ownership) {
     agents.set_navseqs();
 }
 
-bool Simulation::is_valid() const {
-    return valid;
-}
-
-bool Simulation::is_done() const {
-    return current_step >= num_steps;
+Ref<Image> Simulation::get_agents_img() {
+    return agents.get_agents_img();
 }
 
 void Simulation::step() {
@@ -57,9 +54,7 @@ void Simulation::step() {
     current_step += 1;
 }
 
-Ref<Image> Simulation::get_agents_img() {
-    return agents.get_agents_img();
-}
+
 
 
 

@@ -6,14 +6,21 @@
 using namespace godot;
 
 class Human {
-
 private:
-    const World& world
+    bool valid;
+    const World& world;
+    Cell position;
+    Cell home;
+    Cell destination;
+    Path path;
+    Navseq navseq;
+    PersonalVehicle& pv;
 
 public:
     Human();
     Human(const World& world);
     Human(const World& world, Cell home, Cell destination)
     ~Human();
+    bool is_valid() const { return valid; }
 
 };

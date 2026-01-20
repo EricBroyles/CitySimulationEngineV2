@@ -1,3 +1,7 @@
+/*
+Get rid of
+*/
+
 #pragma once
 
 #include "godot_cpp/classes/ref_counted.hpp"

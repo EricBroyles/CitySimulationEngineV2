@@ -2,28 +2,22 @@
 #include "world.h"
 using namespace godot;
 
-Agents::Agents() : valid(false) {}
+Agents::Agents(): 
+    valid(false),
+    {}
 
 Agents::Agents(const World& p_world, int num_humans, float ownership): 
-    valid(false),  
-    world = 
-    // CONTINUE FROM HERE
+    valid(true),
+    world(p_world),
+    agents_img(Image::create(p_world.cols(), p_world.rows(), false, Image::FORMAT_RGBA8)), 
     {
-    valid = true;
-    world = p_world;
-    agents_img = Image::create(p_world.cols(), p_world.rows(), false, Image::FORMAT_RGBA8);
-    humans
-    pvs
+        
+    // humans
+    // pvs
 
-
-
-
-    // parameterized constructor implementation
-    // need to cerate the agents_img based on size of world
 }
 
 Agents::~Agents() {
-    // destructor implementation
 }
 
 void Agents::set_destinations() {

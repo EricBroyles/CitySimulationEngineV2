@@ -125,7 +125,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 	unhandled_move()
 	if not cmdline_focus and Input.is_action_just_released("space_bar"): 
 		if sim.is_valid() and not sim.is_done(): 
-			print("step")
 			sim.step()
 	
 func reset() -> void:

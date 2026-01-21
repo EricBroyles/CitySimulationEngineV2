@@ -19,8 +19,7 @@ private:
 public:
     Human();
     Human(const World& world);
-    Human(const World& world, Cell home, Cell destination)
-    ~Human();
-    bool is_valid() const { return valid; }
-
+    Human(const World& world, Cell home, Cell destination);
+    bool is_valid() const {return valid;}
+    void invalid() {valid(false);}
 };

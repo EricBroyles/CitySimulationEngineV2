@@ -10,7 +10,6 @@ public:
     Speed(float speed): val(speed) {}
     Speed(int sec_per_step, int feet_per_cell, int mph) { val = mph * (1.0f/3600.0f) * sec_per_step * 5280.0f * 1.0f/feet_per_cell; }
     Speed(World& world, int mph) { val = mph * (1.0f/3600.0f) * world.step_duration * 5280.0f * 1.0f/world.cell_width; }
-    ~Speed();
 };
 
 class Direction {
@@ -34,7 +33,6 @@ public:
         val = (e ? E : NONE) | (ne ? NE : NONE) | (n ? N : NONE) | (nw ? NW : NONE) |
               (w ? W : NONE) | (sw ? SW : NONE) | (s ? S : NONE) | (se ? SE : NONE);
     }
-    ~Direction();
     bool atleast1_matches(Direction other) { return (val & other.val) != 0; }
 };
 
@@ -44,6 +42,5 @@ public:
     Direction direction;
     Velocity(): speed(Speed()), direction(Direction()) {}
     Velocity(Speed spd, Direction dir): speed(spd), direction(dir) {}
-    ~Velocity(); 
 };
 

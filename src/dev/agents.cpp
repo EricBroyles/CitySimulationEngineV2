@@ -9,7 +9,7 @@ Agents::Agents():
 Agents::Agents(const World& p_world, int num_humans, float ownership): 
     valid(true),
     world(p_world),
-    agents_img(Image::create(p_world.cols(), p_world.rows(), false, Image::FORMAT_RGBA8)), 
+    agents_img(Image::create(p_world.cols, p_world.rows, false, Image::FORMAT_RGBA8)), 
     {
         
     // humans

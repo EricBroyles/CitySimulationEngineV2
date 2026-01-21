@@ -22,11 +22,11 @@ private:
 public:
     Agents();
     Agents(const World& world, int num_humans, float personal_vehicle_ownership);
-    ~Agents();
-    bool is_valid() const { return valid; }
-    void set_destinations();
-    void set_navseqs();
-    Ref<Image> get_agents_img() const;
+    bool is_valid() const {return valid;}
+    bool invalid() {valid(false);}
+    void set_destinations(); //maybe
+    void set_navseqs(); //maybe
+    Ref<Image> get_agents_img() const {return agents_img;};
     void step();
     
 };

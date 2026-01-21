@@ -1,7 +1,10 @@
 #include "world.h"
+
 using namespace godot;
 
-World::World() {
+World::World():
+
+{
     // constructor implementation
 }
 
@@ -9,6 +12,3 @@ World::World(const Ref<Image> tt, const Ref<Image> tm, const Ref<Image> dir, con
     // parameterized constructor implementation
 }
 
-World::~World() {
-    // destructor implementation
-}

@@ -6,19 +6,20 @@ PREFERENCES: higher scores indicate a greater perference. Multiply the preferenc
 */
 
 class Navseq {
-private:
-    Navseq::OPTIONS _opt;
 public:
     enum class OPTIONS {NONE, WALK, DRIVE};
-    static constexpr float PREFERENCES[3] = {0, 1, .9};
-    Navseq(): _opt(Navseq::OPTIONS::NONE) {}
-    Navseq(Navseq::OPTIONS opt): _opt(opt) {}
+    static constexpr float PREFERENCES[3] = {0.0f, 1.0f, 0.9f};
+private:
+    OPTIONS _opt;
+public:
+    Navseq(): _opt(OPTIONS::NONE) {}
+    Navseq(OPTIONS opt): _opt(opt) {}
     Navseq(Human& human) {
-        if !(human.valid) {_opt(Navseq::OPTIONS::None); return;}
+        if !(human.valid) {_opt(OPTIONS::None); return;}
 
         // FINISH.
     }
-    bool is_valid() const {return option != Navseq::OPTIONS::NONE}
-    void invalid() {_opt(Navseq::OPTIONS::NONE);}
-    Navseq::OPTIONS option() {return _opt;}
+    bool is_valid() const {return option != OPTIONS::NONE}
+    void invalid() {_opt(OPTIONS::NONE);}
+    OPTIONS option() {return _opt;}
 };

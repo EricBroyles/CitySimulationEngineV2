@@ -6,16 +6,13 @@ class Speed {
 // (mi / hour) (1 hour / 60 min) (1 min / 60 sec) (sec_per_step) (5280 ft / 1 mi) (1/feet_per_cell)
 public:
     float val;
-    Speed(): val(0) {}
-    Speed(float speed): val(speed) {}
-    Speed(int sec_per_step, int feet_per_cell, int mph) { val = mph * (1.0f/3600.0f) * sec_per_step * 5280.0f * 1.0f/feet_per_cell; }
-    Speed(World& world, int mph) { val = mph * (1.0f/3600.0f) * world.step_duration * 5280.0f * 1.0f/world.cell_width; }
+    constexpr Speed(): val(0) {}
+    constexpr Speed(float speed): val(speed) {}
+    constexpr Speed(int sec_per_step, int feet_per_cell, int mph) { val = mph * (1.0f/3600.0f) * sec_per_step * 5280.0f * 1.0f/feet_per_cell; }
+    constexpr Speed(World& world, int mph) { val = mph * (1.0f/3600.0f) * world.step_duration * 5280.0f * 1.0f/world.cell_width; }
 };
 
 class Direction {
-private:
-    uint8_t val;
-
 public: 
     static constexpr uint8_t NONE = 0b00000000;
     static constexpr uint8_t E    = 0b00000001;
@@ -27,20 +24,30 @@ public:
     static constexpr uint8_t S    = 0b01000000;
     static constexpr uint8_t SE   = 0b10000000;
     static constexpr uint8_t ALL  = 0b11111111;
-    Direction(): val(NONE) {}
-    Direction(uint8_t dir): val(dir) {}
-    Direction(bool e, bool ne, bool n, bool nw, bool w, bool sw, bool s, bool se) {
+    uint8_t val;
+    constexpr Direction(): val(NONE) {}
+    constexpr Direction(uint8_t dir): val(dir) {}
+    constexpr Direction(bool e, bool ne, bool n, bool nw, bool w, bool sw, bool s, bool se) {
         val = (e ? E : NONE) | (ne ? NE : NONE) | (n ? N : NONE) | (nw ? NW : NONE) |
               (w ? W : NONE) | (sw ? SW : NONE) | (s ? S : NONE) | (se ? SE : NONE);
     }
-    bool atleast1_matches(Direction other) { return (val & other.val) != 0; }
+    static bool atleast1_matches(const Direction& d1, const Direction& d2) const {return (d1.val & d2.val) != 0;}
+    static Direction and(const Direction& d1, const Direction& d2) {return Direction(d1.val & d2.val);}
+    bool operator[](int i) const {
+        // given an integer corrsponding to a direction determine if that direction is in this direction
+        // dir_mask: 0 -> E = 00000001, 1 -> NE = 00000010
+        if (i < 0 || i > 7) {return false;}
+        uint8_t dir_mask = 1 << i; //2^i
+        return val & dir_mask; //false if 0
+    }
+    bool is_none() const {return val == NONE;}
 };
 
 class Velocity {
 public:
     Speed speed;
     Direction direction;
-    Velocity(): speed(Speed()), direction(Direction()) {}
-    Velocity(Speed spd, Direction dir): speed(spd), direction(dir) {}
+    constexpr Velocity(): speed(Speed()), direction(Direction()) {}
+    constexpr Velocity(Speed spd, Direction dir): speed(spd), direction(dir) {}
 };
 

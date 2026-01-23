@@ -4,18 +4,9 @@
 #include "world.h"
 
 /*
-
-// dir matrix, get_dir -> Direction
-        // TT connected to set for walk and drive
-
-        //walk: 
-        // for each cell in tt, 
-        // check is tt != WALKWAY, CROSSWALK, PARKING, BUILDING -> Cm group is invalid
-        // else: check tl, t, tr, l cells that I can move to via dir. 
-        // as soon as one is not invalid or out of bounds, get its cm group and set it to this cell.
-        // continue
-
-        // same idea for drive but tt != ROAD, PARKING, CROSSWALK
+Connectivity Matrix (CM)
+* each cell ig given a cm_group_id which indicated to what cells it is connected to.
+* connected only requires 
 
 */
 
@@ -31,34 +22,34 @@ public:
     int id() const {return _id;}
 };
 
+
+
+
+// THis does not work as inteded
+
+
 class ConnectivityMatrix {
 private:
     bool valid;
     static constexpr std::array<Direction,4> SEARCH_DIRECTIONS = {Direction(Direction::NE), Direction(Direction::N),Direction(Direction::NW), Direction(Direction::W)};
     const std::vector<CMGroup> walk;
     const std::vector<CMGroup> drive;
-    // THIS IS NOT GOOD. 
-    CMGroup get_walk_group(const World& world, const Cell& cell, const Direction& dir, const CMGroup& initial_group) const {
-        if !(world.can_walk_at(cell);) {return CMGroup();}
+    CMgroup get_group(const World& world, const Cell& cell, const Direction& dir) const {
         for (Direction search: SEARCH_DIRECTIONS) {
-            if !(Direction::atleast1_matches(dir,search)) {continue;}
+            if (Direction::no_matches(dir,search)) {continue;}
             Cell adj_cell = cell.get_adjacent(search)
-            if !(world.in_bounds(adj_cell)) {continue;} //this check also deals with invalid cells
-            int idx = adj_cell.get_rowwise_idx(world.cols)
-            return CMGroup(idx);
-        }
+            if (world.out_of_bounds(adj_cell)) {continue;} //handles invalid cells
+            int id = adj_cell.get_rowwise_idx(world.cols)
+            return CMGroup(id);}
         return CMGroup();
     }
-    CMGroup get_drive_group(const World& world, const Cell& cell, const Direction& dir, const CMGroup& initial_group) const {
-        if !(world.can_drive_at(cell);) {return CMGroup();}
-        for (Direction search: SEARCH_DIRECTIONS) {
-            if !(Direction::atleast1_matches(dir,search)) {continue;}
-            Cell adj_cell = cell.get_adjacent(search)
-            if !(world.in_bounds(adj_cell)) {continue;} //this check also deals with invalid cells
-            int idx = adj_cell.get_rowwise_idx(world.cols)
-            return CMGroup(idx);
-        }
-        return CMGroup();
+    CMGroup get_walk_group(const World& world, const Cell& cell, const Direction& dir) const {
+        if !(world.can_walk_at(cell)) {return CMGroup();}
+        return get_group(world, cell, dir);
+    }
+    CMGroup get_drive_group(const World& world, const Cell& cell, const Direction& dir) const {
+        if !(world.can_drive_at(cell)) {return CMGroup();}
+        return get_group(world, cell, dir);
     }
 public:
     ConnectivityMatrix(): valid(false) {}
@@ -68,9 +59,8 @@ public:
             Cell cell = Cell(c,r);
             Direction dir = world.get_dir(cell)
             int idx = cell.get_rowwise_idx(world.cols)
-            CMGroup initial_group = CMGroup(idx);
-            walk[idx] = get_walk_group(world, cell, dir, initial_group);
-            drive[idx] = get_drive_group(world, cell, dir, initial_group);
+            walk[idx] = get_walk_group(world, cell, dir);
+            drive[idx] = get_drive_group(world, cell, dir);
         }}
     }
     bool is_valid() const {return valid;}

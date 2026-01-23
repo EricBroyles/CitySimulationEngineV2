@@ -42,5 +42,6 @@ public:
     bool can_drive_at(const Cell& cell) const {return DRIVE_WALK_TT[get_tt(cell);]} //can_walk_here
     bool can_walk_between(const Cell& cell1, const Cell& cell2) const; //finish latter, connectivity
     bool in_bounds(const Cell& cell) const {return cell.in_bounds(0,0,cols,rows);}
+    bool out_of_bounds(const Cell& cell) const {return !in_bounds(cell);}
 
 };

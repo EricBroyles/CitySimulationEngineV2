@@ -32,6 +32,7 @@ public:
               (w ? W : NONE) | (sw ? SW : NONE) | (s ? S : NONE) | (se ? SE : NONE);
     }
     static bool atleast1_matches(const Direction& d1, const Direction& d2) const {return (d1.val & d2.val) != 0;}
+    static bool no_matches(const Direction& d1, const Direction& d2) const {return (d1.val & d2.val) == 0;} // None & None -> no matching direction so true
     static Direction and(const Direction& d1, const Direction& d2) {return Direction(d1.val & d2.val);}
     bool operator[](int i) const {
         // given an integer corrsponding to a direction determine if that direction is in this direction

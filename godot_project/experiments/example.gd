@@ -1,5 +1,6 @@
 extends Node
 
+
 @onready var sprite = %Sprite2D
 
 func _ready() -> void:

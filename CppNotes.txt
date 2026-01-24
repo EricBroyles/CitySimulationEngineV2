@@ -47,4 +47,9 @@ operations
 
 int id() const {return _id} -> const promises not to modify this*, so I can use it on const members (getters that dont modify state should have const)
 
-constexpr Direction(...) constructor means this CAN be used in constexpr memebers and non constexpr members
+constexpr Direction(...) constructor means this CAN be used in constexpr memebers and non constexpr members.
+cannot have a const constructor but can have a constexpr constructor
+
+you do not repeat the static keyword in the .cpp file when defining a static member function.
+
+

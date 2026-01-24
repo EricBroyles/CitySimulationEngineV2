@@ -1,3 +1,4 @@
+/*
 #include "agents.h"
 #include "world.h"
 using namespace godot;
@@ -35,3 +36,6 @@ void Agents::step() {
 Ref<Image> Agents::get_agents_img() const {
     return agents_img;
 }
+
+
+*/

@@ -1,5 +1,4 @@
 #include "register_types.h"
-
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
@@ -7,23 +6,24 @@
 
 #include "example_class.h"
 #include "modify_img_update_tex.h"
-#include "simulation.h"
+// #include "simulation.h"
+#include "tester.h"
+// ADD HERE 1/2.
 
 using namespace godot;
 
 void initialize_gdextension_types(ModuleInitializationLevel p_level)
 {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
-	
 	GDREGISTER_CLASS(ExampleClass);
 	GDREGISTER_CLASS(ExpModifyImgUpdateTex);
-	GDREGISTER_CLASS(Simulation);
-
+	// GDREGISTER_CLASS(Simulation);
+	GDREGISTER_CLASS(Tester);
+	//ADD HERE 2/2.
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) return;
-	
 }
 
 extern "C"
@@ -35,7 +35,6 @@ extern "C"
 		init_obj.register_initializer(initialize_gdextension_types);
 		init_obj.register_terminator(uninitialize_gdextension_types);
 		init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
-
 		return init_obj.init();
 	}
 }

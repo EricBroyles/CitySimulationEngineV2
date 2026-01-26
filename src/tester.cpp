@@ -2,6 +2,7 @@
 #include "tester.h"
 #include "dev\cell.hpp"
 #include "dev\vec.hpp"
+#include "dev\direction.hpp"
 using namespace godot;
 
 void Tester::_bind_methods() {

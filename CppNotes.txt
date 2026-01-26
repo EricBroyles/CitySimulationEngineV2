@@ -87,3 +87,6 @@ Vec2i result = vec + cell;  // cell converts to Vec2i first
 
 
 MOstly unhelpful error: "rc\register_types.cpp(13): error C2059: syntax error: 'using namespace'" -> likly due to issue in #include of a dependency.
+
+
+the function(params) const {} const part only refers to "this". with friend it makes the method a non class memebre and their is not a this so cnanot have a const.

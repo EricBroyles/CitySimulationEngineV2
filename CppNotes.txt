@@ -52,4 +52,38 @@ cannot have a const constructor but can have a constexpr constructor
 
 you do not repeat the static keyword in the .cpp file when defining a static member function.
 
+when operator+ is a memeber (dont make it a memeber)
+operator+
+Cell C
+Vec v
+c + v -> c::operator+ v
+v + c -> v::operator+ c 
 
+
+Cell c;
+Cell* p = &c;
+
+this   == p
+*this  == c
+
+
+Circular dependency:
+#include Cell in Vec and vice versa, need to forward declare...
+
+Implicit conversion
+Cell cell(10, 20);
+Vec2i vec = cell;  // Implicit conversion: Cell → Vec2i
+
+Vec2i getPosition() {
+    Cell cell(5, 10);
+    return cell;  // Implicit conversion: Cell → Vec2i
+}
+
+Cell cell(10, 20);
+Vec2i vec(5, 5);
+
+Vec2i result = vec + cell;  // cell converts to Vec2i first
+// Without conversion operator, this wouldn't compile
+
+
+MOstly unhelpful error: "rc\register_types.cpp(13): error C2059: syntax error: 'using namespace'" -> likly due to issue in #include of a dependency.

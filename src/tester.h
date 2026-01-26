@@ -15,7 +15,7 @@
 * Recompile -> restart godot 
 * Call method from godot
 
-@examples
+@use
 ==============================
 "GDScript"
 var tester: Tester = Tester()
@@ -27,6 +27,7 @@ tester.matrix_tests()
 #pragma once
 #include <godot_cpp/classes/ref_counted.hpp>
 #include "dev\cell.hpp"
+#include "dev\vec.hpp"
 using namespace godot;
 
 class Tester : public RefCounted {
@@ -37,5 +38,5 @@ protected:
     static void _bind_methods(); 
 public:
     Tester() {};
-    void cell_tests() const;
+    void cell_vec_tests() const;
 };

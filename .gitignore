@@ -1,3 +1,13 @@
+# Build artifacts
+# *.dll
+# *.lib
+# *.exp
+# *.pdb
+# *.ilk
+# bin/
+# *.o
+# *.obj
+
 # Godot auto generated files
 *.gen.*
 .godot/

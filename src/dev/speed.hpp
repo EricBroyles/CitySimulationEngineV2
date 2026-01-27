@@ -1,10 +1,8 @@
 /*
 @Speed
-
 @brief
 * convert mph -> cell/step
 * conversion: (mile/hour) (feet/mile) (cell/feet) (hour/sec) (sec/step)
-
 */
 #pragma once
 

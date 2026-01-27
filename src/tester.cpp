@@ -3,6 +3,7 @@
 #include "dev\cell.hpp"
 #include "dev\vec.hpp"
 #include "dev\direction.hpp"
+#include "dev\speed.hpp"
 using namespace godot;
 
 void Tester::_bind_methods() {
@@ -12,7 +13,19 @@ void Tester::_bind_methods() {
 }
 
 void Tester::speed_tests() const {
+    print_line("@Test --- Speed");
+    // Construction
+    print_line(vformat("[Pass: %s] Speed() creates zero speed", Speed().val == 0.0f));
+    print_line(vformat("[Pass: %s] Speed(5.0f) creates speed with val=5.0", Speed(5.0f).val == 5.0f));
 
+    // MPH constructor - 60 mph, 1 sec/step, 10 ft/cell should give 8.8 cells/step
+    Speed test_mph(60, 1, 10);
+    print_line(vformat("[Pass: %s] Speed(60 mph, 1 sec/step, 10 ft/cell) ≈ 8.8 cells/step", 
+        abs(test_mph.val - 8.8f) < 0.01f));
+
+    // Constexpr
+    constexpr Speed compile_time(5.0f);
+    print_line(vformat("[Pass: %s] constexpr Speed works at compile time", compile_time.val == 5.0f));
 }
 
 void Tester::direction_tests() const {

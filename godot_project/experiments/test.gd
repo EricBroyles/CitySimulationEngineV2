@@ -6,4 +6,5 @@ func _ready() -> void:
 	#tester.direction_tests()
 	#tester.speed_tests()
 	tester.terrain_type_tests()
+	tester.terrain_mod_tests()
 	

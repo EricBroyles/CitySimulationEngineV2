@@ -14,7 +14,53 @@ void Tester::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("direction_tests"), &Tester::direction_tests);
 	ClassDB::bind_method(D_METHOD("speed_tests"), &Tester::speed_tests);
 	ClassDB::bind_method(D_METHOD("terrain_type_tests"), &Tester::terrain_type_tests);
+    ClassDB::bind_method(D_METHOD("terrain_mod_tests"), &Tester::terrain_mod_tests);
+}
 
+void Tester::terrain_mod_tests() const {
+    print_line("@Test --- TerrainMod");
+
+    // Construction - default
+    print_line(vformat("[Pass: %s] TerrainMod() creates NONE", TerrainMod().val == TerrainMod::NONE));
+
+    // Construction - from uint8_t  values)
+    print_line(vformat("[Pass: %s] TerrainMod(JUNCTION_STOP)", TerrainMod(TerrainMod::JUNCTION_STOP).val == TerrainMod::JUNCTION_STOP));
+    print_line(vformat("[Pass: %s] TerrainMod(JUNCTION1)", TerrainMod(TerrainMod::JUNCTION1).val == TerrainMod::JUNCTION1));
+    print_line(vformat("[Pass: %s] TerrainMod(JUNCTION2)", TerrainMod(TerrainMod::JUNCTION2).val == TerrainMod::JUNCTION2));
+    print_line(vformat("[Pass: %s] TerrainMod(JUNCTION3)", TerrainMod(TerrainMod::JUNCTION3).val == TerrainMod::JUNCTION3));
+    print_line(vformat("[Pass: %s] TerrainMod(LANE_DIVIDER)", TerrainMod(TerrainMod::LANE_DIVIDER).val == TerrainMod::LANE_DIVIDER));
+
+    // Construction - invalid values (should throw)
+    bool threw_max = false;
+    try {
+        TerrainMod invalid(TerrainMod::MAX);
+    } catch (const std::invalid_argument& e) {
+        threw_max = true;
+    }
+    print_line(vformat("[Pass: %s] TerrainMod(MAX) throws exception", threw_max));
+
+    bool threw_over = false;
+    try {
+        TerrainMod invalid(100);
+    } catch (const std::invalid_argument& e) {
+        threw_over = true;
+    }
+    print_line(vformat("[Pass: %s] TerrainMod(100) throws exception", threw_over));
+
+    // Construction - from Image
+    Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
+    test_image->fill(Color(0, 0, 0));  // NONE = 0
+    test_image->set_pixel(2, 2, Color(1.0f/255.0f, 0, 0));  // JUNCTION_STOP = 1
+    test_image->set_pixel(4, 4, Color(5.0f/255.0f, 0, 0));  // LANE_DIVIDER = 5
+
+    TerrainMod from_img_none(0, 0, test_image);
+    print_line(vformat("[Pass: %s] TerrainMod from image (0,0) creates NONE", from_img_none.val == TerrainMod::NONE));
+
+    TerrainMod from_img_stop(2, 2, test_image);
+    print_line(vformat("[Pass: %s] TerrainMod from image (2,2) creates JUNCTION_STOP", from_img_stop.val == TerrainMod::JUNCTION_STOP));
+
+    TerrainMod from_img_divider(4, 4, test_image);
+    print_line(vformat("[Pass: %s] TerrainMod from image (4,4) creates LANE_DIVIDER", from_img_divider.val == TerrainMod::LANE_DIVIDER));
 }
 
 void Tester::terrain_type_tests() const {

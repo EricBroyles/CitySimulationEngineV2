@@ -90,3 +90,11 @@ MOstly unhelpful error: "rc\register_types.cpp(13): error C2059: syntax error: '
 
 
 the function(params) const {} const part only refers to "this". with friend it makes the method a non class memebre and their is not a this so cnanot have a const.
+
+
+ENUMS ----
+enum class TT {NONE}
+neeed to use TT:: even inside the class. and CLASS::TT:: outside
+
+enum TT {}
+do not use TT:: inside and only need CLASS:: to access contents

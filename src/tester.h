@@ -44,4 +44,5 @@ public:
     void direction_tests() const;
     void speed_tests() const;
     void terrain_type_tests() const;
+    void terrain_mod_tests() const;
 };

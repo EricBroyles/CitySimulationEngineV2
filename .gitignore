@@ -1,12 +1,5 @@
-# Build artifacts
-# *.dll
-# *.lib
-# *.exp
-# *.pdb
-# *.ilk
-# bin/
-# *.o
-# *.obj
+# MINE: ignore all the .dll
+*.dll
 
 # Godot auto generated files
 *.gen.*

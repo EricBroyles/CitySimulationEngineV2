@@ -4,12 +4,83 @@
 #include "dev\vec.hpp"
 #include "dev\direction.hpp"
 #include "dev\speed.hpp"
+#include "dev\terrain_type.hpp"
+#include "dev\terrain_mod.hpp"
+
 using namespace godot;
 
 void Tester::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("cell_vec_tests"), &Tester::cell_vec_tests);
 	ClassDB::bind_method(D_METHOD("direction_tests"), &Tester::direction_tests);
 	ClassDB::bind_method(D_METHOD("speed_tests"), &Tester::speed_tests);
+	ClassDB::bind_method(D_METHOD("terrain_type_tests"), &Tester::terrain_type_tests);
+
+}
+
+void Tester::terrain_type_tests() const {
+    print_line("@Test --- TerrainType");
+
+    // Construction - default
+    print_line(vformat("[Pass: %s] TerrainType() creates NONE", TerrainType().val == TerrainType::NONE));
+
+    // Construction - from uint8_t (valid values)
+    print_line(vformat("[Pass: %s] TerrainType(ROAD) creates ROAD", TerrainType(TerrainType::ROAD).val == TerrainType::ROAD));
+    print_line(vformat("[Pass: %s] TerrainType(WALKWAY) creates WALKWAY", TerrainType(TerrainType::WALKWAY).val == TerrainType::WALKWAY));
+    print_line(vformat("[Pass: %s] TerrainType(CROSSWALK) creates CROSSWALK", TerrainType(TerrainType::CROSSWALK).val == TerrainType::CROSSWALK));
+    print_line(vformat("[Pass: %s] TerrainType(PARKING) creates PARKING", TerrainType(TerrainType::PARKING).val == TerrainType::PARKING));
+    print_line(vformat("[Pass: %s] TerrainType(BUILDING) creates BUILDING", TerrainType(TerrainType::BUILDING).val == TerrainType::BUILDING));
+    print_line(vformat("[Pass: %s] TerrainType(BARRIER) creates BARRIER", TerrainType(TerrainType::BARRIER).val == TerrainType::BARRIER));
+
+    // Construction - invalid values (should throw)
+    bool threw_negative = false;
+    try {
+        TerrainType invalid(-1);
+    } catch (const std::invalid_argument& e) {
+        threw_negative = true;
+    }
+    print_line(vformat("[Pass: %s] TerrainType(-1) throws exception", threw_negative));
+
+    bool threw_max = false;
+    try {
+        TerrainType invalid(TerrainType::MAX);
+    } catch (const std::invalid_argument& e) {
+        threw_max = true;
+    }
+    print_line(vformat("[Pass: %s] TerrainType(MAX) throws exception", threw_max));
+
+    bool threw_over_max = false;
+    try {
+        TerrainType invalid(100);
+    } catch (const std::invalid_argument& e) {
+        threw_over_max = true;
+    }
+    print_line(vformat("[Pass: %s] TerrainType(100) throws exception", threw_over_max));
+
+    // Construction - from Image
+    Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
+    test_image->fill(Color(0, 0, 0));  // Fill with black (NONE = 0)
+
+    // Set pixels
+    test_image->set_pixel(5, 5, Color(1.0f/255.0f, 0, 0));  // Red = 1
+    test_image->set_pixel(3, 3, Color(2.0f/255.0f, 0, 0));  // Red = 2
+
+    // Debug: Check what values we actually get back
+    Color debug_pixel_road = test_image->get_pixel(5, 5);
+    Color debug_pixel_walk = test_image->get_pixel(3, 3);
+    print_line(vformat("Debug: Pixel (5,5) r = %f, r*255 = %d", debug_pixel_road.r, (int)(debug_pixel_road.r * 255)));
+    print_line(vformat("Debug: Pixel (3,3) r = %f, r*255 = %d", debug_pixel_walk.r, (int)(debug_pixel_walk.r * 255)));
+
+    TerrainType from_img_none(0, 0, test_image);
+    print_line(vformat("[Pass: %s] TerrainType from image pixel (0,0) creates NONE (val=%d)", 
+        from_img_none.val == TerrainType::NONE, from_img_none.val));
+
+    TerrainType from_img_road(5, 5, test_image);
+    print_line(vformat("[Pass: %s] TerrainType from image pixel (5,5) creates ROAD (val=%d, expected=1)", 
+        from_img_road.val == TerrainType::ROAD, from_img_road.val));
+
+    TerrainType from_img_walkway(3, 3, test_image);
+    print_line(vformat("[Pass: %s] TerrainType from image pixel (3,3) creates WALKWAY (val=%d, expected=2)", 
+        from_img_walkway.val == TerrainType::WALKWAY, from_img_walkway.val));
 }
 
 void Tester::speed_tests() const {

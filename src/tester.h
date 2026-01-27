@@ -43,4 +43,5 @@ public:
     void cell_vec_tests() const;
     void direction_tests() const;
     void speed_tests() const;
+    void terrain_type_tests() const;
 };

@@ -39,23 +39,14 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
 env.Append(CPPPATH=["src/"])
 
-
+## MINE: used to allow try/catch for testing
+# Add exception handling flag for MSVC (Windows)
+if env["platform"] == "windows":
+    env.Append(CXXFLAGS=['/EHsc'])
+## END
 
 
 sources = Glob("src/*.cpp")
-
-##MINE
-#def recursive_glob(rootdir, pattern):
-#    matches = []
-#    for root, dirs, files in os.walk(rootdir):
-#        for filename in files:
-#            if filename.endswith(pattern):
-#                matches.append(os.path.join(root, filename))
-#    return matches
-#
-#sources = recursive_glob("src", ".cpp")
-##MINE END
-
 
 
 if env["target"] in ["editor", "template_debug"]:

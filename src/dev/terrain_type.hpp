@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 #include <godot_cpp/classes/image.hpp>
+#include "cell.hpp"
 
 struct TerrainType {
 private:
@@ -10,5 +11,5 @@ public:
     uint8_t val;
     constexpr TerrainType(): val(NONE) {}
     constexpr TerrainType(uint8_t v): val(v) { validate(); } 
-    TerrainType(size_t c, size_t r, const Ref<Image>& godot_tt): val((godot_tt->get_pixel(c,r)).r *255) { validate(); }
+    TerrainType(const Cell& cell, const Ref<Image>& godot_tt): val((godot_tt->get_pixel(cell.x,cell.y)).r *255) { validate(); }
 };

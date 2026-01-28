@@ -6,6 +6,7 @@
 #include "dev\speed.hpp"
 #include "dev\terrain_type.hpp"
 #include "dev\terrain_mod.hpp"
+#include "dev\matrix.hpp"
 
 using namespace godot;
 
@@ -15,6 +16,80 @@ void Tester::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("speed_tests"), &Tester::speed_tests);
 	ClassDB::bind_method(D_METHOD("terrain_type_tests"), &Tester::terrain_type_tests);
     ClassDB::bind_method(D_METHOD("terrain_mod_tests"), &Tester::terrain_mod_tests);
+    ClassDB::bind_method(D_METHOD("matrix_tests"), &Tester::matrix_tests);
+}
+
+void Tester::matrix_tests() const {
+    print_line("==================================");
+    print_line("@Test: Matrix");
+    int passed = 0, total = 0; bool pass;
+
+    total++; pass = true;
+    {
+        Matrix<int> matrix(5, 5);
+        matrix.at(Cell(2, 3)) = 42;
+        pass = (matrix.at(Cell(2, 3)) == 42);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Set and get value at Cell(2,3)", pass));
+
+    total++; pass = true;
+    {
+        Matrix<int> matrix(3, 3);
+        pass = (matrix.at(Cell(1, 1)) == 0); // int() == 0
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Default initialization to T()", pass));
+
+    total++; pass = true;
+    {
+        Matrix<int> matrix(4, 4);
+        matrix.at(Cell(2, 2)) = 100;
+        const Matrix<int>& const_ref = matrix;
+        pass = (const_ref.at(Cell(2, 2)) == 100);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Const reference access", pass));
+
+    total++; pass = true;
+    {
+        Matrix<float> matrix(2, 2);
+        matrix.at(Cell(0, 0)) = 3.14f;
+        matrix.at(Cell(1, 1)) = 2.71f;
+        pass = (matrix.at(Cell(0, 0)) > 3.13f && matrix.at(Cell(0, 0)) < 3.15f &&
+                matrix.at(Cell(1, 1)) > 2.70f && matrix.at(Cell(1, 1)) < 2.72f);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Matrix<float> type", pass));
+
+    total++; pass = true;
+    {
+        Matrix<int> matrix(5, 5);
+        matrix.at(Cell(0, 0)) = 1;    // Top-left
+        matrix.at(Cell(4, 0)) = 2;    // Top-right
+        matrix.at(Cell(0, 4)) = 3;    // Bottom-left
+        matrix.at(Cell(4, 4)) = 4;    // Bottom-right
+        pass = (matrix.at(Cell(0, 0)) == 1 &&
+                matrix.at(Cell(4, 0)) == 2 &&
+                matrix.at(Cell(0, 4)) == 3 &&
+                matrix.at(Cell(4, 4)) == 4);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Edge cell access", pass));
+
+    total++; pass = true;
+    {
+        Matrix<int> matrix(3, 3);
+        matrix.at(Cell(1, 1)) = 10;
+        int& ref = matrix.at(Cell(1, 1));
+        ref = 20;
+        pass = (matrix.at(Cell(1, 1)) == 20);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Reference modification", pass));
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::terrain_mod_tests() const {
@@ -53,13 +128,13 @@ void Tester::terrain_mod_tests() const {
     test_image->set_pixel(2, 2, Color(1.0f/255.0f, 0, 0));  // JUNCTION_STOP = 1
     test_image->set_pixel(4, 4, Color(5.0f/255.0f, 0, 0));  // LANE_DIVIDER = 5
 
-    TerrainMod from_img_none(0, 0, test_image);
+    TerrainMod from_img_none(Cell(0,0), test_image);
     print_line(vformat("[Pass: %s] TerrainMod from image (0,0) creates NONE", from_img_none.val == TerrainMod::NONE));
 
-    TerrainMod from_img_stop(2, 2, test_image);
+    TerrainMod from_img_stop(Cell(2,2), test_image);
     print_line(vformat("[Pass: %s] TerrainMod from image (2,2) creates JUNCTION_STOP", from_img_stop.val == TerrainMod::JUNCTION_STOP));
 
-    TerrainMod from_img_divider(4, 4, test_image);
+    TerrainMod from_img_divider(Cell(4,4), test_image);
     print_line(vformat("[Pass: %s] TerrainMod from image (4,4) creates LANE_DIVIDER", from_img_divider.val == TerrainMod::LANE_DIVIDER));
 }
 
@@ -116,15 +191,15 @@ void Tester::terrain_type_tests() const {
     print_line(vformat("Debug: Pixel (5,5) r = %f, r*255 = %d", debug_pixel_road.r, (int)(debug_pixel_road.r * 255)));
     print_line(vformat("Debug: Pixel (3,3) r = %f, r*255 = %d", debug_pixel_walk.r, (int)(debug_pixel_walk.r * 255)));
 
-    TerrainType from_img_none(0, 0, test_image);
+    TerrainType from_img_none(Cell(0,0), test_image);
     print_line(vformat("[Pass: %s] TerrainType from image pixel (0,0) creates NONE (val=%d)", 
         from_img_none.val == TerrainType::NONE, from_img_none.val));
 
-    TerrainType from_img_road(5, 5, test_image);
+    TerrainType from_img_road(Cell(5,5), test_image);
     print_line(vformat("[Pass: %s] TerrainType from image pixel (5,5) creates ROAD (val=%d, expected=1)", 
         from_img_road.val == TerrainType::ROAD, from_img_road.val));
 
-    TerrainType from_img_walkway(3, 3, test_image);
+    TerrainType from_img_walkway(Cell(3,3), test_image);
     print_line(vformat("[Pass: %s] TerrainType from image pixel (3,3) creates WALKWAY (val=%d, expected=2)", 
         from_img_walkway.val == TerrainType::WALKWAY, from_img_walkway.val));
 }
@@ -360,14 +435,14 @@ void Tester::cell_vec_tests() const {
     print_line(vformat("[Pass: %s] Cell(1,1) is valid", Cell(1,1).is_valid()));
     print_line(vformat("[Pass: %s] Cell(2,3) is valid", Cell(2,3).is_valid()));
     print_line(vformat("[Pass: %s] Cell(-1,-1) is invalid", Cell(-1,-1).is_invalid()));
-    print_line(vformat("[Pass: %s] Cell(Vec2i(5,10)) creates cell at (5,10)", Cell(Vec2i(5,10)).x() == 5 && Cell(Vec2i(5,10)).y() == 10));
+    print_line(vformat("[Pass: %s] Cell(Vec2i(5,10)) creates cell at (5,10)", Cell(Vec2i(5,10)).x == 5 && Cell(Vec2i(5,10)).y== 10));
     print_line(vformat("[Pass: %s] Cell(Vec2i(-4,-5)) is invalid", Cell(Vec2i(-4,-5)).is_invalid()));
 
     // Accessors
     Cell test_cell = Cell(7,9);
     print_line("Variable: test_cell = Cell(7,9)");
-    print_line(vformat("[Pass: %s] test_cell.x() == 7", test_cell.x() == 7));
-    print_line(vformat("[Pass: %s] test_cell.y() == 9", test_cell.y() == 9));
+    print_line(vformat("[Pass: %s] test_cell.x == 7", test_cell.x == 7));
+    print_line(vformat("[Pass: %s] test_cell.y == 9", test_cell.y == 9));
 
     // Validation
     print_line(vformat("[Pass: %s] Cell(0,0) is valid", Cell(0,0).is_valid()));
@@ -455,6 +530,9 @@ void Tester::cell_vec_tests() const {
     print_line("Variable: chain_test = Cell(1,1)");
     print_line(vformat("[Pass: %s] Chained operations: (chain_test += Vec2i(2,2)) += Cell(3,3) == Cell(6,6)", 
         ((chain_test += Vec2i(2,2)) += Cell(3,3)) == Cell(6,6)));
+
+    print_line("@Test --- Cell.to_idx");
+    print_line(vformat("[Pass: %s] Cell(1,2) cols = 3 -> idx == 7", Cell(1,2).to_idx(3) == 7));
 }
 
 

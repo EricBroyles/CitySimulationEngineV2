@@ -1,20 +1,3 @@
-
-
-//tt as godot
-//tm as godot
-//mph as godot
-//dir as godot
-//speed as matrix<speed>
-//cm 
-//speed conversion macros
-// and tick duration macros needed for speed
-// needs a emtpy constructor.
-//get speed, tt, tm, dir,... 
-//can walk at, can drive at
-//validity
-// this has nothing to do with agents.
-// int sec_per_step, int feet_per_cell
-
 #pragma once
 #include "cell.hpp"
 #include "terrain_type.hpp"

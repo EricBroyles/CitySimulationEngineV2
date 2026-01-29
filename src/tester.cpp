@@ -20,11 +20,167 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("matrix_tests"), &Tester::matrix_tests);
     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
-
 }
 
 void Tester::world_tests() const {
-    
+    print_line("==================================");
+    print_line("@Test: World");
+    int passed = 0, total = 0; bool pass;
+
+    total++; pass = true;
+    {
+        World world;
+        pass = (world.is_invalid() && !world.is_valid());
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Default constructor creates invalid world", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        Ref<Image> img_tm = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        pass = (world.is_valid() && !world.is_invalid());
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Parameterized constructor creates valid world", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img_tt->set_pixel(1, 1, Color(1.0/255.0, 0.0, 0.0));
+        Ref<Image> img_tm = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        TerrainType tt = world.get_tt(Cell(1, 1));
+        pass = (tt == TerrainType(1));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_tt() returns correct TerrainType", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_tm = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img_tm->set_pixel(2, 2, Color(2.0/255.0, 0.0, 0.0));
+        Ref<Image> img_speed = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        TerrainMod tm = world.get_tm(Cell(2, 2));
+        pass = (tm == TerrainMod(2));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_tm() returns correct TerrainMod", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        Ref<Image> img_tm = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        img_speed->set_pixel(1, 1, Color(50.0/255.0, 0.0, 0.0));
+        Ref<Image> img_dir = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 10, 8);
+        Speed speed = world.get_speed(Cell(1, 1));
+        pass = (speed == Speed(50, 10, 8));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_speed() returns Speed with world parameters", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_tm = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img_dir->set_pixel(2, 1, Color(8.0/255.0, 0.0, 0.0));
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        Direction dir = world.get_dir(Cell(2, 1));
+        pass = (dir == Direction(8));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_dir() returns correct Direction", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        img_tt->set_pixel(0, 0, Color(1.0/255.0, 0.0, 0.0));
+        img_tt->set_pixel(1, 1, Color(2.0/255.0, 0.0, 0.0));
+        img_tt->set_pixel(2, 2, Color(3.0/255.0, 0.0, 0.0));
+        Ref<Image> img_tm = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        pass = (world.get_tt(Cell(0, 0)) == TerrainType(1) &&
+                world.get_tt(Cell(1, 1)) == TerrainType(2) &&
+                world.get_tt(Cell(2, 2)) == TerrainType(3));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Multiple cells return different values", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img_tt->set_pixel(1, 1, Color(5.0/255.0, 0.0, 0.0));
+        Ref<Image> img_tm = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        Ref<Image> img_dir = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        
+        const World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        pass = (world.is_valid() && 
+                world.get_tt(Cell(1, 1)) == TerrainType(5));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Const World allows const method calls", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img_tt->set_pixel(0, 0, Color(1.0/255.0, 0.0, 0.0));
+        img_tt->set_pixel(4, 4, Color(2.0/255.0, 0.0, 0.0));
+        Ref<Image> img_tm = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img_tm->set_pixel(0, 4, Color(3.0/255.0, 0.0, 0.0));
+        Ref<Image> img_speed = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img_speed->set_pixel(4, 0, Color(4.0/255.0, 0.0, 0.0));
+        Ref<Image> img_dir = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img_dir->set_pixel(2, 2, Color(5.0/255.0, 0.0, 0.0));
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 6, 5);
+        pass = (world.get_tt(Cell(0, 0)) == TerrainType(1) &&
+                world.get_tt(Cell(4, 4)) == TerrainType(2) &&
+                world.get_tm(Cell(0, 4)) == TerrainMod(3) &&
+                world.get_speed(Cell(4, 0)) == Speed(4, 6, 5) &&
+                world.get_dir(Cell(2, 2)) == Direction(5));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] All matrices accessible at edge cells", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img_tt = Image::create(2, 2, false, Image::FORMAT_RGB8);
+        Ref<Image> img_tm = Image::create(2, 2, false, Image::FORMAT_RGB8);
+        Ref<Image> img_speed = Image::create(2, 2, false, Image::FORMAT_RGB8);
+        img_speed->set_pixel(1, 1, Color(25.0/255.0, 0.0, 0.0));
+        Ref<Image> img_dir = Image::create(2, 2, false, Image::FORMAT_RGB8);
+        
+        World world(img_tt, img_tm, img_speed, img_dir, 12, 10);
+        Speed speed = world.get_speed(Cell(1, 1));
+        // Verify the Speed was constructed with the correct parameters
+        pass = (speed == Speed(25, 12, 10));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Speed constructed with world's sec_per_step and feet_per_cell", pass));
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::image_matrix_tests() const {

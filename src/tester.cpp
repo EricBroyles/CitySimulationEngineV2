@@ -8,6 +8,8 @@
 #include "dev\matrix.hpp"
 #include "dev\image_matrix.hpp"
 #include "dev\world.hpp"
+#include "dev\cmid.hpp"
+#include "dev\connectivity_matrix.hpp"
 
 using namespace godot;
 
@@ -20,6 +22,130 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("matrix_tests"), &Tester::matrix_tests);
     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
+    ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
+}
+
+void Tester::cmid_tests() const {
+    print_line("==================================");
+    print_line("@Test: CMID");
+    int passed = 0, total = 0; bool pass;
+
+    // Test 1-3: Construction and constants
+    total++; pass = true;
+    {
+        CMID default_id;
+        CMID custom_id(5);
+        CMID barrier_id(CMID::BARRIER);
+        pass = (default_id.val == CMID::INVALID &&
+                custom_id.val == 5 &&
+                barrier_id.val == CMID::BARRIER &&
+                CMID::INVALID == -2 &&
+                CMID::BARRIER == -1);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Construction and constant values", pass));
+
+    // Test 4-5: Validity checks
+    total++; pass = true;
+    {
+        CMID invalid_id;
+        CMID barrier_id(CMID::BARRIER);
+        CMID valid_id(0);
+        CMID valid_id2(10);
+        pass = (invalid_id.is_invalid() && !invalid_id.is_valid() &&
+                !barrier_id.is_invalid() && barrier_id.is_valid() &&
+                valid_id.is_valid() && !valid_id.is_invalid() &&
+                valid_id2.is_valid() && !valid_id2.is_invalid());
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] is_valid() and is_invalid() checks", pass));
+
+    // Test 6: Barrier check
+    total++; pass = true;
+    {
+        CMID barrier_id(CMID::BARRIER);
+        CMID not_barrier(0);
+        CMID invalid_id;
+        pass = (barrier_id.is_barrier() &&
+                !not_barrier.is_barrier() &&
+                !invalid_id.is_barrier());
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] is_barrier() check", pass));
+
+    // Test 7-8: invalidate() and barrier() methods
+    total++; pass = true;
+    {
+        CMID id(5);
+        id.invalidate();
+        bool first_check = (id.val == CMID::INVALID && id.is_invalid());
+        
+        id = CMID(10);
+        id.barrier();
+        bool second_check = (id.val == CMID::BARRIER && id.is_barrier());
+        
+        pass = (first_check && second_check);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] invalidate() and barrier() methods", pass));
+
+    // Test 9: Prefix increment operator
+    total++; pass = true;
+    {
+        CMID id(5);
+        CMID& result = ++id;
+        pass = (id.val == 6 && result.val == 6 && &result == &id);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Prefix increment operator (++id)", pass));
+
+    // Test 10: Equality operator
+    total++; pass = true;
+    {
+        CMID id1(5);
+        CMID id2(5);
+        CMID id3(10);
+        CMID barrier1(CMID::BARRIER);
+        CMID barrier2(CMID::BARRIER);
+        pass = (id1 == id2 &&
+                !(id1 == id3) &&
+                barrier1 == barrier2 &&
+                !(id1 == barrier1));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Equality operator (==)", pass));
+
+    // Test 11: Edge cases - boundary values
+    total++; pass = true;
+    {
+        CMID zero_id(0);
+        CMID negative_id(-3);
+        CMID large_id(1000000);
+        pass = (zero_id.is_valid() &&
+                negative_id.is_invalid() &&
+                large_id.is_valid());
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Boundary values (0, negative, large positive)", pass));
+
+    // Test 12: Increment from various states
+    total++; pass = true;
+    {
+        CMID from_barrier(CMID::BARRIER);
+        ++from_barrier;
+        CMID from_zero(0);
+        ++from_zero;
+        CMID from_negative(-5);
+        ++from_negative;
+        pass = (from_barrier.val == 0 &&
+                from_zero.val == 1 &&
+                from_negative.val == -4);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Increment from barrier, zero, and negative", pass));
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::world_tests() const {

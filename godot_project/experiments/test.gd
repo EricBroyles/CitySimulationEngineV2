@@ -10,3 +10,4 @@ func _ready() -> void:
 	tester.matrix_tests()
 	tester.image_matrix_tests()
 	tester.world_tests()
+	tester.cmid_tests()

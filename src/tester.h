@@ -48,4 +48,5 @@ public:
     void matrix_tests() const;
     void image_matrix_tests() const;
     void world_tests() const;
+    void cmid_tests() const;
 };

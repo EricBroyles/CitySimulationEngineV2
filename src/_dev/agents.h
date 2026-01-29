@@ -17,6 +17,7 @@
 //     std::vector<PersonalVehicle> pvs;
 
 //     //HANDLE THE AGENTS COLOR IN HERE DONT NEED A SPERATE CLASS
+// agents color: (type: human/car, position: idx, sub position, orientation)
     
 
 // public:

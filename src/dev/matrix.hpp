@@ -17,6 +17,7 @@ template <typename T> class Matrix {
     std::vector<T> data;
 public:
     int cols, rows;
+    constexpr Matrix(): Matrix(0,0) {}
     constexpr Matrix(int c, int r): cols(c), rows(r), data(c*r) {} //data filled with T()
     T& at(const Cell& cell) { return data.at(cell.to_idx(cols)); } //used with Matrix, can modify
     const T& at(const Cell& cell) const { return data.at(cell.to_idx(cols)); } //used with const Matrix, read only (returns a constant reference)

@@ -43,6 +43,20 @@ env.Append(CPPPATH=["src/"])
 # Add exception handling flag for MSVC (Windows)
 if env["platform"] == "windows":
     env.Append(CXXFLAGS=['/EHsc'])
+
+# Enable C++20 - REMOVE C++17 first to avoid warning
+if env.get("is_msvc", False):
+    # Remove any existing /std: flags
+    env["CCFLAGS"] = [flag for flag in env.get("CCFLAGS", []) if not flag.startswith("/std:")]
+    env["CXXFLAGS"] = [flag for flag in env.get("CXXFLAGS", []) if not flag.startswith("/std:")]
+    # Add C++20
+    env.Append(CCFLAGS=["/std:c++20"])
+else:
+    # For GCC/Clang (Linux, macOS, MinGW)
+    env["CCFLAGS"] = [flag for flag in env.get("CCFLAGS", []) if not flag.startswith("-std=")]
+    env["CXXFLAGS"] = [flag for flag in env.get("CXXFLAGS", []) if not flag.startswith("-std=")]
+    # Add C++20
+    env.Append(CCFLAGS=["-std=c++20"])
 ## END
 
 

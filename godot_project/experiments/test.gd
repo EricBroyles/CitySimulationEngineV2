@@ -8,4 +8,5 @@ func _ready() -> void:
 	#tester.terrain_type_tests()
 	#tester.terrain_mod_tests()
 	tester.matrix_tests()
+	tester.image_matrix_tests()
 	

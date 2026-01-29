@@ -46,4 +46,6 @@ public:
     void terrain_type_tests() const;
     void terrain_mod_tests() const;
     void matrix_tests() const;
+    void image_matrix_tests() const;
+    void world_tests() const;
 };

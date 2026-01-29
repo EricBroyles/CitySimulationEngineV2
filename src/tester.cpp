@@ -1,4 +1,3 @@
-// #include <godot_cpp/variant/string.hpp> //might not need
 #include "tester.h"
 #include "dev\cell.hpp"
 #include "dev\vec.hpp"
@@ -7,6 +6,8 @@
 #include "dev\terrain_type.hpp"
 #include "dev\terrain_mod.hpp"
 #include "dev\matrix.hpp"
+#include "dev\image_matrix.hpp"
+#include "dev\world.hpp"
 
 using namespace godot;
 
@@ -17,6 +18,165 @@ void Tester::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("terrain_type_tests"), &Tester::terrain_type_tests);
     ClassDB::bind_method(D_METHOD("terrain_mod_tests"), &Tester::terrain_mod_tests);
     ClassDB::bind_method(D_METHOD("matrix_tests"), &Tester::matrix_tests);
+    ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
+    ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
+
+}
+
+void Tester::world_tests() const {
+    
+}
+
+void Tester::image_matrix_tests() const {
+    print_line("==================================");
+    print_line("@Test: ImageMatrix");
+    int passed = 0, total = 0; bool pass;
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(10, 8, false, Image::FORMAT_RGB8);
+        ImageMatrix<TerrainType> matrix(img);
+        pass = (matrix.cols == 10 && matrix.rows == 8);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Image dimensions (cols/rows)", pass));
+
+    total++; pass = true;
+    {
+        ImageMatrix<TerrainType> matrix;
+        pass = (matrix.cols == 0 && matrix.rows == 0);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Default constructor initializes to 0x0", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img->set_pixel(2, 3, Color(0.5, 0.0, 0.0)); // r = 0.5
+        ImageMatrix<TerrainType> matrix(img);
+        uint8_t val = matrix.get_r8(Cell(2, 3));
+        pass = (val >= 127 && val <= 128); // 0.5 * 255 ≈ 127-128
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_r8() extracts red channel", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img->set_pixel(1, 1, Color(3/255.0, 0.0, 0.0));
+        ImageMatrix<TerrainType> matrix(img);
+        TerrainType tt = matrix.get_tt(Cell(1, 1));
+        pass = (tt == TerrainType(3));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_tt() returns TerrainType", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(4, 4, false, Image::FORMAT_RGB8);
+        img->set_pixel(2, 2, Color(2/255.0, 0.0, 0.0));
+        ImageMatrix<TerrainMod> matrix(img);
+        TerrainMod tm = matrix.get_tm(Cell(2, 2));
+        pass = (tm == TerrainMod(2));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_tm() returns TerrainMod", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img->set_pixel(3, 3, Color(50.0/255.0, 0.0, 0.0));
+        ImageMatrix<Speed> matrix(img);
+        Speed speed = matrix.get_speed(Cell(3, 3), 6, 5);
+        pass = (speed == Speed(50, 6, 5));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_speed() returns Speed with parameters", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(6, 6, false, Image::FORMAT_RGB8);
+        img->set_pixel(4, 4, Color(8.0/255.0, 0.0, 0.0));
+        ImageMatrix<Direction> matrix(img);
+        Direction dir = matrix.get_dir(Cell(4, 4));
+        pass = (dir == Direction(8));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] get_dir() returns Direction", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(7, 7, false, Image::FORMAT_RGB8);
+        img->set_pixel(0, 0, Color(1.0/255.0, 0.0, 0.0));    // Top-left
+        img->set_pixel(6, 0, Color(2.0/255.0, 0.0, 0.0));    // Top-right
+        img->set_pixel(0, 6, Color(3.0/255.0, 0.0, 0.0));    // Bottom-left
+        img->set_pixel(6, 6, Color(4.0/255.0, 0.0, 0.0));    // Bottom-right
+        ImageMatrix<TerrainType> matrix(img);
+        pass = (matrix.get_tt(Cell(0, 0)) == TerrainType(1) &&
+                matrix.get_tt(Cell(6, 0)) == TerrainType(2) &&
+                matrix.get_tt(Cell(0, 6)) == TerrainType(3) &&
+                matrix.get_tt(Cell(6, 6)) == TerrainType(4));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Corner cell access", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(3, 3, false, Image::FORMAT_RGB8);
+        img->set_pixel(1, 1, Color(5/255.0, 0.0, 0.0));
+        const ImageMatrix<TerrainType> matrix(img);
+        pass = (matrix.get_r8(Cell(1, 1)) == 5);
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Const ImageMatrix access", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(2, 2, false, Image::FORMAT_RGB8);
+        img->set_pixel(1, 1, Color(1.0/255.0, 0.0, 0.0));
+        ImageMatrix<TerrainType> matrix(img);
+        uint8_t val1 = matrix.get_r8(Cell(1, 1));
+        uint8_t val2 = matrix.get_r8(Cell(1, 1));
+        TerrainType tt = matrix.get_tt(Cell(1, 1));
+        pass = (val1 == 1 && val2 == 1 && tt == TerrainType(1));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Multiple reads return consistent values", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(5, 5, false, Image::FORMAT_RGB8);
+        img->set_pixel(0, 0, Color(1.0/255.0, 0.0, 0.0));
+        img->set_pixel(1, 1, Color(2.0/255.0, 0.0, 0.0));
+        img->set_pixel(2, 2, Color(3.0/255.0, 0.0, 0.0));
+        ImageMatrix<TerrainType> matrix(img);
+        pass = (matrix.get_tt(Cell(0, 0)) == TerrainType(1) &&
+                matrix.get_tt(Cell(1, 1)) == TerrainType(2) &&
+                matrix.get_tt(Cell(2, 2)) == TerrainType(3));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Different cells have different values", pass));
+
+    total++; pass = true;
+    {
+        Ref<Image> img = Image::create(100, 200, false, Image::FORMAT_RGB8);
+        img->set_pixel(99, 199, Color(0.0/255.0, 0.0, 0.0));
+        ImageMatrix<TerrainMod> matrix(img);
+        pass = (matrix.cols == 100 && 
+                matrix.rows == 200 && 
+                matrix.get_tm(Cell(99, 199)) == TerrainMod(0));
+    }
+    if (pass) passed++;
+    print_line(vformat("[Pass: %s] Large image (100x200) handling", pass));
+
+    //This passed if it fails to comile. (PASSED.)
+    // {
+    //     ImageMatrix<Speed> matrix();
+    //     matrix.get_dir();
+    // }
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::matrix_tests() const {
@@ -122,20 +282,21 @@ void Tester::terrain_mod_tests() const {
     }
     print_line(vformat("[Pass: %s] TerrainMod(100) throws exception", threw_over));
 
+    print_line("Check If I need these tests ...");
     // Construction - from Image
-    Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
-    test_image->fill(Color(0, 0, 0));  // NONE = 0
-    test_image->set_pixel(2, 2, Color(1.0f/255.0f, 0, 0));  // JUNCTION_STOP = 1
-    test_image->set_pixel(4, 4, Color(5.0f/255.0f, 0, 0));  // LANE_DIVIDER = 5
+    // Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
+    // test_image->fill(Color(0, 0, 0));  // NONE = 0
+    // test_image->set_pixel(2, 2, Color(1.0f/255.0f, 0, 0));  // JUNCTION_STOP = 1
+    // test_image->set_pixel(4, 4, Color(5.0f/255.0f, 0, 0));  // LANE_DIVIDER = 5
 
-    TerrainMod from_img_none(Cell(0,0), test_image);
-    print_line(vformat("[Pass: %s] TerrainMod from image (0,0) creates NONE", from_img_none.val == TerrainMod::NONE));
+    // TerrainMod from_img_none(Cell(0,0), test_image);
+    // print_line(vformat("[Pass: %s] TerrainMod from image (0,0) creates NONE", from_img_none.val == TerrainMod::NONE));
 
-    TerrainMod from_img_stop(Cell(2,2), test_image);
-    print_line(vformat("[Pass: %s] TerrainMod from image (2,2) creates JUNCTION_STOP", from_img_stop.val == TerrainMod::JUNCTION_STOP));
+    // TerrainMod from_img_stop(Cell(2,2), test_image);
+    // print_line(vformat("[Pass: %s] TerrainMod from image (2,2) creates JUNCTION_STOP", from_img_stop.val == TerrainMod::JUNCTION_STOP));
 
-    TerrainMod from_img_divider(Cell(4,4), test_image);
-    print_line(vformat("[Pass: %s] TerrainMod from image (4,4) creates LANE_DIVIDER", from_img_divider.val == TerrainMod::LANE_DIVIDER));
+    // TerrainMod from_img_divider(Cell(4,4), test_image);
+    // print_line(vformat("[Pass: %s] TerrainMod from image (4,4) creates LANE_DIVIDER", from_img_divider.val == TerrainMod::LANE_DIVIDER));
 }
 
 void Tester::terrain_type_tests() const {
@@ -177,31 +338,32 @@ void Tester::terrain_type_tests() const {
     }
     print_line(vformat("[Pass: %s] TerrainType(100) throws exception", threw_over_max));
 
+    print_line("Check If I need these tests ...");
     // Construction - from Image
-    Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
-    test_image->fill(Color(0, 0, 0));  // Fill with black (NONE = 0)
+    // Ref<Image> test_image = Image::create(10, 10, false, Image::FORMAT_RGB8);
+    // test_image->fill(Color(0, 0, 0));  // Fill with black (NONE = 0)
 
-    // Set pixels
-    test_image->set_pixel(5, 5, Color(1.0f/255.0f, 0, 0));  // Red = 1
-    test_image->set_pixel(3, 3, Color(2.0f/255.0f, 0, 0));  // Red = 2
+    // // Set pixels
+    // test_image->set_pixel(5, 5, Color(1.0f/255.0f, 0, 0));  // Red = 1
+    // test_image->set_pixel(3, 3, Color(2.0f/255.0f, 0, 0));  // Red = 2
 
-    // Debug: Check what values we actually get back
-    Color debug_pixel_road = test_image->get_pixel(5, 5);
-    Color debug_pixel_walk = test_image->get_pixel(3, 3);
-    print_line(vformat("Debug: Pixel (5,5) r = %f, r*255 = %d", debug_pixel_road.r, (int)(debug_pixel_road.r * 255)));
-    print_line(vformat("Debug: Pixel (3,3) r = %f, r*255 = %d", debug_pixel_walk.r, (int)(debug_pixel_walk.r * 255)));
+    // // Debug: Check what values we actually get back
+    // Color debug_pixel_road = test_image->get_pixel(5, 5);
+    // Color debug_pixel_walk = test_image->get_pixel(3, 3);
+    // print_line(vformat("Debug: Pixel (5,5) r = %f, r*255 = %d", debug_pixel_road.r, (int)(debug_pixel_road.r * 255)));
+    // print_line(vformat("Debug: Pixel (3,3) r = %f, r*255 = %d", debug_pixel_walk.r, (int)(debug_pixel_walk.r * 255)));
 
-    TerrainType from_img_none(Cell(0,0), test_image);
-    print_line(vformat("[Pass: %s] TerrainType from image pixel (0,0) creates NONE (val=%d)", 
-        from_img_none.val == TerrainType::NONE, from_img_none.val));
+    // TerrainType from_img_none(Cell(0,0), test_image);
+    // print_line(vformat("[Pass: %s] TerrainType from image pixel (0,0) creates NONE (val=%d)", 
+    //     from_img_none.val == TerrainType::NONE, from_img_none.val));
 
-    TerrainType from_img_road(Cell(5,5), test_image);
-    print_line(vformat("[Pass: %s] TerrainType from image pixel (5,5) creates ROAD (val=%d, expected=1)", 
-        from_img_road.val == TerrainType::ROAD, from_img_road.val));
+    // TerrainType from_img_road(Cell(5,5), test_image);
+    // print_line(vformat("[Pass: %s] TerrainType from image pixel (5,5) creates ROAD (val=%d, expected=1)", 
+    //     from_img_road.val == TerrainType::ROAD, from_img_road.val));
 
-    TerrainType from_img_walkway(Cell(3,3), test_image);
-    print_line(vformat("[Pass: %s] TerrainType from image pixel (3,3) creates WALKWAY (val=%d, expected=2)", 
-        from_img_walkway.val == TerrainType::WALKWAY, from_img_walkway.val));
+    // TerrainType from_img_walkway(Cell(3,3), test_image);
+    // print_line(vformat("[Pass: %s] TerrainType from image pixel (3,3) creates WALKWAY (val=%d, expected=2)", 
+    //     from_img_walkway.val == TerrainType::WALKWAY, from_img_walkway.val));
 }
 
 void Tester::speed_tests() const {

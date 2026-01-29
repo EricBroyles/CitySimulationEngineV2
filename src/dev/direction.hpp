@@ -1,6 +1,8 @@
 #pragma once
 #include <stdexcept>
+// #include <godot_cpp/classes/image.hpp>
 #include "vec.hpp"
+#include "cell.hpp"
 
 struct Direction {
     static constexpr int NUM_DIR = 8;
@@ -17,6 +19,7 @@ struct Direction {
     uint8_t val;
     constexpr Direction(): Direction(NONE) {}
     constexpr Direction(uint8_t v): val(v) {}
+    // Direction(const Cell& cell, const Ref<Image>& img): val((img->get_pixel(cell.x,cell.y)).r * 255) {}
     constexpr bool is_none() const { return val == NONE; }
     constexpr int count() const { 
         int count = 0; uint8_t v = val; while(v){count += v & 1; v >>= 1;} return count;}

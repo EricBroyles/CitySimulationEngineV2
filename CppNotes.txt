@@ -98,3 +98,15 @@ neeed to use TT:: even inside the class. and CLASS::TT:: outside
 
 enum TT {}
 do not use TT:: inside and only need CLASS:: to access contents
+
+
+Constant ---
+class Example {
+public:
+    const int method1();        // Returns const int, CAN modify members
+    int method2() const;        // Returns int, CANNOT modify members
+    const int method3() const;  // Returns const int, CANNOT modify members
+};
+
+const int x = obj.method();  // const matters here
+int y = obj.method();        // const is discarded, perfectly valid

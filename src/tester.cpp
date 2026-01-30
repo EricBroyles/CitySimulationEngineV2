@@ -9,7 +9,7 @@
 #include "dev\image_matrix.hpp"
 #include "dev\world.hpp"
 #include "dev\cmid.hpp"
-#include "dev\connectivity_matrix.hpp"
+// #include "dev\connectivity_matrix.hpp"
 
 using namespace godot;
 
@@ -23,6 +23,34 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
     ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
+    ClassDB::bind_method(D_METHOD("connectivity_matrix_tests"), &Tester::connectivity_matrix_tests);
+
+}
+void Tester::connectivity_matrix_tests() const {
+    // walkway, crosswalk, parking, building
+    // road, crosswalk, parking
+    // barrier
+
+    // no direction
+    // all directions
+
+    //strips
+    // N arrow 
+    // S arrow
+    // E arrow
+    // W
+    // NE
+
+    // random dir and 
+
+
+
+
+    // Test 10x10 no directions, all walkway
+    // Test 10x10 no directions, all road
+    // Test 10x10 no directions, 
+    // Test 10x10 up arrows
+    // Teste 10x10 
 }
 
 void Tester::cmid_tests() const {

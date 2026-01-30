@@ -12,6 +12,7 @@ struct CMID {
     void invalidate() { val = INVALID; }
     void barrier() { val = BARRIER; }
     CMID& operator++() { ++val; return *this; } //++CMID only. 
-    bool  operator==(const CMID& other) const {return val == other.val;} 
+    bool  operator==(const CMID& other) const { return val == other.val; } 
+    bool  operator!=(const CMID& other) const { return val != other.val; } 
 };
 

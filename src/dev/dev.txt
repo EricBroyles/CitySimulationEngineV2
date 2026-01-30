@@ -1,0 +1,18 @@
+keep WOrld and CM seperate. to avoid circular dependency.
+
+
+Agents:
+* need to allow multiple agents (humans) on the same tile
+
+StepDrawPackage
+* each cell in world sized image has an id that points to location in smaller images that are more proportional to the size of the agents
+* 65,000 agents 256x256 image. 
+* this draw package is gathered by godot and then sent down to sahder to be drawn.
+* information needed to draw agents: 2 steps a then and a now to then smoothly move between them.
+*   location: infered from location in the world image (dont need to use any bits)
+*   orientation: 3 bits
+*   type: human or car
+*   
+
+location, orientation, human or car, human inside car, car parked, human not moving 
+car and human can be on the same tile. 

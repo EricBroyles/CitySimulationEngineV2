@@ -1,5 +1,6 @@
 #pragma once
 #include "vec.hpp"
+#include "direction.hpp"
 
 struct Cell {
     int x, y;
@@ -14,9 +15,10 @@ struct Cell {
     constexpr bool is_invalid() const { return !is_valid(); }
     void invalidate() { x = INVALID; y = INVALID; }
     constexpr bool in_bounds(int lbx, int lby, int ubx, int uby) const { return x >= lbx && x <= ubx && y >= lby && y <= uby; }
+    Cell get_adjacent_cell(const SoloDirection& solo) const { return Cell(x,y) += solo.to_vec2i(); }
     constexpr bool operator==(const Cell& rhs) const { return x == rhs.x && y == rhs.y; }
     constexpr bool operator!=(const Cell& rhs) const { return !(*this == rhs); }
-    Cell& operator+=(const Cell& rhs) { x += rhs.x; y += rhs.y; return *this; }
+    Cell& operator+=(const Cell& rhs) { x += rhs.x; y += rhs.y; return *this; } //returing a reference is to allow chaining cell += difcell += other cell ...
     Cell& operator+=(const Vec2i& rhs) { x += rhs.x; y += rhs.y; return *this; }
     friend Cell operator+(Cell lhs, const Cell& rhs) { return lhs += rhs; }
     friend Cell operator+(Cell lhs, const Vec2i& rhs) { return lhs += rhs; }

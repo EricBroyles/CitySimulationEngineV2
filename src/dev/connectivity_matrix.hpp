@@ -1,14 +1,5 @@
-// barriers matrix (cannot walk and none dir)
-// @each cell: search for a smaller CMID
-// am I a barrier, then continue
-// for all 4 cells that might have a smaller CMID
-//      is it a barrier, continue
-//      Do DIrections point to each other. -> ( I look up and to the top left
-
-//process each cell
-// I need an emtpy CM
-
 #pragma once
+#include <array>
 #include "cell.hpp"
 #include "matrix.hpp"
 #include "direction.hpp"
@@ -17,8 +8,17 @@
 
 class ConnectivityMatrix {
     bool valid;
+    static constexpr int NUM_CHECK_DIR = 4;
+    static constexpr std::array<SoloDirection, NUM_CHECK_DIR> UP_DIRS = {SoloDirection(Direction::NW), SoloDirection(Direction::N), SoloDirection(Direction::NE), SoloDirection(Direction::W)};
+    static constexpr std::array<SoloDirection, NUM_CHECK_DIR> DOWN_DIRS = {SoloDirection(Direction::SE), SoloDirection(Direction::S), SoloDirection(Direction::SW), SoloDirection(Direction::E)};
     Matrix<CMID> walk;
     Matrix<CMID> drive;
-
+    bool is_walk_barrier(const World& world, const Cell& cell, const Direction& dir) const;
+    bool is_drive_barrier(const World& world, const Cell& cell, const Direction& dir) const;
+    void set_barriers(const World& world);
+    void set_cell_cmid(const World& world, Matrix<CMID>& matrix, const Cell& cell);
+    void set_cmids(const World& world);
+public:
+    ConnectivityMatrix(): valid(false), walk(), drive() {}
+    ConnectivityMatrix(const World& world);
 };
-

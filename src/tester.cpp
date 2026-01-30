@@ -7,7 +7,7 @@
 #include "dev\terrain_mod.hpp"
 #include "dev\matrix.hpp"
 #include "dev\image_matrix.hpp"
-#include "dev\world.hpp"
+#include "world.hpp"
 #include "dev\cmid.hpp"
 // #include "dev\connectivity_matrix.hpp"
 
@@ -200,7 +200,7 @@ void Tester::world_tests() const {
         pass = (world.is_valid() && !world.is_invalid());
     }
     if (pass) passed++;
-    print_line(vformat("[Pass: %s] Parameterized constructor creates valid world", pass));
+    print_line(vformat("[Pass: %s] Parameterized constructor creates valid world (Debug:5)", pass));
 
     total++; pass = true;
     {

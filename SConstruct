@@ -37,7 +37,8 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CPPPATH=["src/"])
+env.Append(CPPPATH=["src", "src/dev"])
+# env.Append(CPPPATH=["src/"]) 
 
 ## MINE: used to allow try/catch for testing
 # Add exception handling flag for MSVC (Windows)
@@ -59,8 +60,8 @@ else:
     env.Append(CCFLAGS=["-std=c++20"])
 ## END
 
-
-sources = Glob("src/*.cpp")
+sources = Glob("src/*.cpp") + Glob("src/dev/*.cpp") ## MINE
+# sources = Glob("src/*.cpp") 
 
 
 if env["target"] in ["editor", "template_debug"]:

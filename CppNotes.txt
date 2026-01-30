@@ -113,5 +113,4 @@ int y = obj.method();        // const is discarded, perfectly valid
 
 
 
-HOW DO .cpp help avoid circular depenedency issues???
-* 
+Warning: trying to access a matrix<CMID> of size 0 will cause godot to crash, does not get cuasght or throw an error anywhere.

@@ -11,6 +11,8 @@
 #include "speed.hpp"
 #include "direction.hpp"
 
+using namespace godot;
+
 template <typename T> class ImageMatrix {
     Ref<Image> data;
 public:

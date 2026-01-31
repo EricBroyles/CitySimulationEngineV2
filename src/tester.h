@@ -49,5 +49,5 @@ public:
     void image_matrix_tests() const;
     void world_tests() const;
     void cmid_tests() const;
-    void connectivity_matrix_tests() const;
+    void world_cm_tests() const;
 };

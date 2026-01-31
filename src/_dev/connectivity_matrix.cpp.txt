@@ -1,0 +1,57 @@
+// #include "connectivity_matrix.hpp"
+// #include <array>
+// #include "cell.hpp"
+// #include "matrix.hpp"
+// #include "direction.hpp"
+// #include "world.hpp"
+// #include "cmid.hpp"
+
+// ConnectivityMatrix::ConnectivityMatrix(const World& world): 
+//     valid(true), walk(world.cols, world.rows), drive(world.cols, world.rows) {
+//     set_barriers(world);
+//     set_cmids(world);
+// } 
+
+// bool ConnectivityMatrix::is_walk_barrier(const World& world, const Cell& cell, const Direction& dir) const {
+//     if (world.can_walk_at(cell) && !dir.is_none()) {return false;}
+//     return true;     
+// }
+
+// bool ConnectivityMatrix::is_drive_barrier(const World& world, const Cell& cell, const Direction& dir) const {
+//     if (world.can_drive_at(cell) && !dir.is_none()) {return false;}
+//     return true;      
+// }
+
+// void ConnectivityMatrix::set_barriers(const World& world) {
+//     for (int r = 0; r < world.rows; r++) {
+//     for (int c = 0; c < world.cols; c++) {
+//         Cell      cell = Cell(c,r);
+//         Direction dir  = world.get_dir(cell);
+//         walk.at(cell) = is_walk_barrier(world, cell, dir)  ? CMID(CMID::BARRIER) : CMID(cell.to_idx(world.cols));
+//         drive.at(cell) = is_drive_barrier(world, cell, dir) ? CMID(CMID::BARRIER) : CMID(cell.to_idx(world.cols));
+//     }}
+// }
+
+// void ConnectivityMatrix::set_cell_cmid(const World& world, Matrix<CMID>& matrix, const Cell& cell) {
+//     CMID& cmid = matrix.at(cell);
+//     if (cmid.is_barrier()) { return; }
+//     for (int i = 0; i < NUM_CHECK_DIR; i++) {
+//         const Cell adj_cell = cell.get_adjacent_cell(UP_DIRS[i]);
+//         if (world.out_of_bounds(adj_cell)) { continue; }
+//         const CMID& adj_cmid = matrix.at(adj_cell); // the "const" here is potentially problamatic
+//         if (adj_cmid.is_barrier()) { continue; }
+//         if (world.get_dir(cell).no_matches(UP_DIRS[i]) && world.get_dir(adj_cell).no_matches(DOWN_DIRS[i])) { continue; } // check do I point up, or does it point down.
+//         cmid = adj_cmid; // this cell is connected to a adjacent cell with a smaller cmid. set it to the smaller cmid.
+//         return;
+//     }
+// }
+
+// void ConnectivityMatrix::set_cmids(const World& world) {
+//     for (int r = 0; r < world.rows; r++) {
+//     for (int c = 0; c < world.cols; c++) {
+//         Cell cell = Cell(c,r);
+//         set_cell_cmid(world, walk, cell);
+//         set_cell_cmid(world, drive, cell);
+//     }}
+// }
+

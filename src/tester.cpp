@@ -23,10 +23,10 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
     ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
-    ClassDB::bind_method(D_METHOD("connectivity_matrix_tests"), &Tester::connectivity_matrix_tests);
+    ClassDB::bind_method(D_METHOD("world_cm_tests"), &Tester::world_cm_tests);
 
 }
-void Tester::connectivity_matrix_tests() const {
+void Tester::world_cm_tests() const {
     // walkway, crosswalk, parking, building
     // road, crosswalk, parking
     // barrier

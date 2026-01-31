@@ -1,4 +1,12 @@
-keep WOrld and CM seperate. to avoid circular dependency.
+BaseWorld
+ConnectivityMatrix
+Parking
+...
+World: BaseWorld
+
+
+
+Agents and Humans and Car. Agents is defined after Human and Car and so cannot see Agents. 
 
 
 Agents:

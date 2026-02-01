@@ -19,23 +19,22 @@ struct Direction {
     uint8_t val;
     constexpr Direction(): Direction(NONE) {}
     constexpr Direction(uint8_t v): val(v) {}
-    // Direction(const Cell& cell, const Ref<Image>& img): val((img->get_pixel(cell.x,cell.y)).r * 255) {}
     constexpr bool is_none() const { return val == NONE; }
     constexpr int count() const { 
         int count = 0; uint8_t v = val; while(v){count += v & 1; v >>= 1;} return count;}
     bool operator[](int i) { return (i >= 0 && i < NUM_DIR) ? bool(val & 1 << i) : false; } //i=0 get E (T/F), i=1 get NE (T/F) --- NOTE 1<<i = 2^i    
-    constexpr Direction& operator+=(const Direction& rhs) { val += rhs.val; return *this; }
-    constexpr Direction& operator-=(const Direction& rhs) { val -= rhs.val; return *this; }
-    constexpr Direction& operator&=(const Direction& rhs) { val &= rhs.val; return *this; }
-    constexpr Direction& operator|=(const Direction& rhs) { val |= rhs.val; return *this; }
-    friend constexpr Direction operator+(Direction copy_lhs, const Direction& rhs) { return copy_lhs += rhs; }
-    friend constexpr Direction operator-(Direction copy_lhs, const Direction& rhs) { return copy_lhs -= rhs; }
-    friend constexpr Direction operator&(Direction copy_lhs, const Direction& rhs) { return copy_lhs &= rhs; }
-    friend constexpr Direction operator|(Direction copy_lhs, const Direction& rhs) { return copy_lhs |= rhs; }
-    bool operator==(const Direction& rhs) const { return val == rhs.val; } // if all 1&0 match
-    bool operator!=(const Direction& rhs) const { return val != rhs.val; } // if any 1&0 do not match
-    bool no_matches(const Direction& dir) const { return (val & dir.val) == NONE; } // if all 1 do not match or no 1 
-    bool atleast1_matches(const Direction& dir) const { return !no_matches(dir); }   // if atleast one 1 matches 
+    constexpr Direction& operator+=(const Direction rhs) { val += rhs.val; return *this; }
+    constexpr Direction& operator-=(const Direction rhs) { val -= rhs.val; return *this; }
+    constexpr Direction& operator&=(const Direction rhs) { val &= rhs.val; return *this; }
+    constexpr Direction& operator|=(const Direction rhs) { val |= rhs.val; return *this; }
+    friend constexpr Direction operator+(Direction lhs, const Direction rhs) { return lhs += rhs; }
+    friend constexpr Direction operator-(Direction lhs, const Direction rhs) { return lhs -= rhs; }
+    friend constexpr Direction operator&(Direction lhs, const Direction rhs) { return lhs &= rhs; }
+    friend constexpr Direction operator|(Direction lhs, const Direction rhs) { return lhs |= rhs; }
+    bool operator==(const Direction rhs) const { return val == rhs.val; } // if all 1&0 match
+    bool operator!=(const Direction rhs) const { return val != rhs.val; } // if any 1&0 do not match
+    bool no_matches(const Direction dir) const { return (val & dir.val) == NONE; } // if all 1 do not match or no 1 
+    bool atleast1_matches(const Direction dir) const { return !no_matches(dir); }   // if atleast one 1 matches 
 };
 
 struct SoloDirection: Direction {
@@ -44,7 +43,7 @@ private:
 public:
     constexpr SoloDirection(): Direction(NONE) {} 
     constexpr SoloDirection(uint8_t v): Direction(v) { validate(); } 
-    constexpr SoloDirection(const Direction& d): Direction(d.val) { validate(); }
+    constexpr SoloDirection(const Direction d): Direction(d.val) { validate(); }
     constexpr Vec2i to_vec2i() const {
         switch(val) {
         case E  : return Vec2i(1,0);

@@ -16,7 +16,6 @@ struct Speed {
     constexpr Speed(float speed): val(speed) {}
     constexpr Speed(int mph, int sec_per_step, int feet_per_cell): val(mph * (FEET_PER_MILE / feet_per_cell) * HOUR_PER_SEC * sec_per_step) {}
 
-    constexpr bool operator==(const Speed& speed) const { return val == speed.val; }
-    constexpr bool operator!=(const Speed& speed) const { return val != speed.val; }
-    // Speed(const Cell& cell, const Ref<Image>& mph_img, int sec_per_step, int feet_per_cell): Speed((mph_img->get_pixel(cell.x,cell.y)).r * 255, sec_per_step, feet_per_cell) {}
+    constexpr bool operator==(const Speed speed) const { return val == speed.val; }
+    constexpr bool operator!=(const Speed speed) const { return val != speed.val; }
 };

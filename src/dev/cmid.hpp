@@ -12,8 +12,8 @@ struct CMID {
     void invalidate() { val = INVALID; }
     void barrier() { val = BARRIER; }
     CMID& operator++() { ++val; return *this; } //++CMID only. 
-    bool  operator==(const CMID& other) const { return val == other.val; } 
-    bool  operator!=(const CMID& other) const { return val != other.val; } 
-    constexpr operator int() const { return val; }
+    bool  operator==(const CMID other) const { return val == other.val; } 
+    bool  operator!=(const CMID other) const { return val != other.val; } 
+    constexpr explicit operator int() const { return val; }
 };
 

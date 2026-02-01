@@ -17,10 +17,9 @@ public:
     constexpr bool can_walk() const { return CAN_WALK[val]; }
     constexpr bool can_drive() const { return CAN_DRIVE[val]; }
 
-    constexpr bool operator==(const TerrainType& tt) const { return val == tt.val; }
-    constexpr bool operator!=(const TerrainType& tt) const { return val != tt.val; }
+    constexpr bool operator==(const TerrainType tt) const { return val == tt.val; }
+    constexpr bool operator!=(const TerrainType tt) const { return val != tt.val; }
 
 
 
-    // TerrainType(const Cell& cell, const Ref<Image>& img): val((img->get_pixel(cell.x,cell.y)).r * 255) { validate(); }
 };

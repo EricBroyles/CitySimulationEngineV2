@@ -7,9 +7,10 @@
 #include "dev\terrain_mod.hpp"
 #include "dev\matrix.hpp"
 #include "dev\image_matrix.hpp"
-#include "world.hpp"
+#include "dev\base_world.hpp"
+#include "dev\world.hpp"
 #include "dev\cmid.hpp"
-// #include "dev\connectivity_matrix.hpp"
+#include "tests\my_connectivity_matrix.hpp"
 
 using namespace godot;
 
@@ -23,10 +24,127 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
     ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
-    ClassDB::bind_method(D_METHOD("world_cm_tests"), &Tester::world_cm_tests);
+    ClassDB::bind_method(D_METHOD("cm_tests"), &Tester::cm_tests);
 
 }
-void Tester::world_cm_tests() const {
+void Tester::cm_tests() const {
+    print_line("==================================");
+    print_line("@Test: Connectivity Matrix in World");
+    bool pass;
+
+
+    print_line("<<<<Test all TT with Direction ALL>>>>\n");
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::NONE),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = NONE, Direction = ALL -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = ROAD, Direction = ALL -> walk CMID = -1, drive CMID = 0"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = WALKWAY, Direction = ALL -> walk CMID = 0, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::CROSSWALK),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = CROSSWALK, Direction = ALL -> all CMID = 0"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::PARKING),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = PARKING, Direction = ALL -> all CMID = 0"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::BUILDING),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = BUILDING, Direction = ALL -> walk CMID = 0, drive CMID = -1"); print_line("");
+    
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::BARRIER),Direction(Direction::ALL));
+    print_line("[Pass: CHECK] TT = BARRIER, Direction = ALL -> all CMID = -1"); print_line("");
+
+
+    print_line("<<<<Test all TT with Direction NONE>>>>\n");
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::NONE),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = NONE, Direction = NONE -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = ROAD, Direction = NONE -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = WALKWAY, Direction = NONE -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::CROSSWALK),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = CROSSWALK, Direction = NONE -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::PARKING),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = PARKING, Direction = NONE -> all CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::BUILDING),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = BUILDING, Direction = NONE -> all CMID = -1"); print_line("");
+    
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::BARRIER),Direction(Direction::NONE));
+    print_line("[Pass: CHECK] TT = BARRIER, Direction = NONE -> all CMID = -1"); print_line("");
+
+
+    print_line("<<<<Test TT WALKWAY with all solo Direction (E,NE,N,NW,W,SW,S,SE)>>>>\n");
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::E));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::E -> walk 10 Direction::E groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::NE));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::NE -> walk 10 Direction::NE groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::N));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::N -> walk 10 Direction::N groups CMID = 0:9, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::NW));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::NW -> walk 10 Direction::NW groups CMID = 0,1,..,9,10,20,..,90 drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::W));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::W -> walk 10 Direction::W groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::SW));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::SW -> walk 10 Direction::SW groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::S));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::S -> walk 10 Direction::S groups CMID = 0:9, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::WALKWAY),Direction(Direction::SE));
+    print_line("[Pass: CHECK] TerrainType::WALKWAY, Direction::SE -> walk 10 Direction::SE groups CMID = 0,1,..,9,10,20,..,90, drive CMID = -1"); print_line("");
+
+
+    print_line("<<<<Test TT ROAD with all solo Direction (E,NE,N,NW,W,SW,S,SE)>>>>\n");
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::E));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::E -> walk 10 Direction::E groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::NE));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NE -> walk 10 Direction::NE groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::N));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::N -> walk 10 Direction::N groups CMID = 0:9, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::NW));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NW -> walk 10 Direction::NW groups CMID = 0,1,..,9,10,20,..,90 drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::W));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::W -> walk 10 Direction::W groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::SW));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SW -> walk 10 Direction::SW groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::S));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::S -> walk 10 Direction::S groups CMID = 0:9, drive CMID = -1"); print_line("");
+
+    MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::SE));
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SE -> walk 10 Direction::SE groups CMID = 0,1,..,9,10,20,..,90, drive CMID = -1"); print_line("");
+
+
+    print_line("<<<<Test TT Parking and Barriers with Direction All>>>>\n");
+    MyConnectivityMatrix::list_tt_list_dir(5,5,{TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER},{Direction::ALL});
+    print_line("[Pass: CHECK] {TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER}, Direction::ALL -> Thin Barrier example, so expect only CMID = 0 and diagonal rows of CMID = -1, same for walk and drive"); print_line("");
+    
+
+
+
+
+
+
+
+    
+
+    print_line("==================================\n");
     // walkway, crosswalk, parking, building
     // road, crosswalk, parking
     // barrier
@@ -34,18 +152,9 @@ void Tester::world_cm_tests() const {
     // no direction
     // all directions
 
-    //strips
-    // N arrow 
-    // S arrow
-    // E arrow
-    // W
-    // NE
+
 
     // random dir and 
-
-
-
-
     // Test 10x10 no directions, all walkway
     // Test 10x10 no directions, all road
     // Test 10x10 no directions, 
@@ -974,12 +1083,12 @@ void Tester::cell_vec_tests() const {
 
     print_line("");
     print_line("@Test --- Cell ↔ Vec2i Conversions");
-    // Implicit conversion
+    // cast conversion
     Cell conv_cell = Cell(5,10);
     print_line("Variable: conv_cell = Cell(5,10)");
-    Vec2i implicit_vec = conv_cell;  // Uses operator Vec2i()
-    print_line(vformat("[Pass: %s] Vec2i implicit_vec = conv_cell; creates Vec2i(5,10)", 
-        implicit_vec == Vec2i(5,10)));
+    Vec2i cast_vec = static_cast<Vec2i>(conv_cell);  // Uses operator Vec2i()
+    print_line(vformat("[Pass: %s] Vec2i cast_vec = conv_cell; creates Vec2i(5,10)", 
+        cast_vec == Vec2i(5,10)));
 
     // Explicit conversion
     Vec2i explicit_vec = conv_cell.to_vec2i();

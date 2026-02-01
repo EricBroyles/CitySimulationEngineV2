@@ -23,14 +23,14 @@ public:
     int cols, rows;
     constexpr Matrix(): Matrix(0,0) {}
     constexpr Matrix(int c, int r): cols(c), rows(r), data(c*r) {} //data filled with T()
-    T& at(const Cell& cell) { return data.at(cell.to_idx(cols)); } 
-    const T& at(const Cell& cell) const { return data.at(cell.to_idx(cols)); } 
+    T& at(const Cell cell) { return data.at(cell.to_idx(cols)); } 
+    const T& at(const Cell cell) const { return data.at(cell.to_idx(cols)); } 
     void display_full_as_int() const {
         for (int r = 0; r < rows; r++) {
             String line = "[";
             for (int c = 0; c < cols; c++) {
                 Cell cell = Cell(c, r);
-                line += vformat("%d", int(at(cell)));
+                line += vformat("%d", static_cast<int>(at(cell)));
                 if (c < cols - 1) {line += " ";}
             }
             line += "]"; 

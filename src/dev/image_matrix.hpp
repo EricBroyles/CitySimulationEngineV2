@@ -19,14 +19,14 @@ public:
     int cols, rows;
     ImageMatrix(): cols(0), rows(0) {}
     ImageMatrix(const Ref<Image> img): cols(img->get_width()), rows(img->get_height()), data(img) {}
-    const uint8_t get_r8(const Cell& cell) const { return data->get_pixel(cell.x,cell.y).r * 255; }
-    const TerrainType get_tt(const Cell& cell) const requires std::is_same_v<T, TerrainType> { 
+    const uint8_t get_r8(const Cell cell) const { return data->get_pixel(cell.x,cell.y).r * 255; }
+    const TerrainType get_tt(const Cell cell) const requires std::is_same_v<T, TerrainType> { 
         return TerrainType(get_r8(cell)); }
-    const TerrainMod get_tm(const Cell& cell) const requires std::is_same_v<T, TerrainMod> { 
+    const TerrainMod get_tm(const Cell cell) const requires std::is_same_v<T, TerrainMod> { 
         return TerrainMod(get_r8(cell)); }
-    const Speed get_speed(const Cell& cell, int sec_per_step, int feet_per_cell) const requires std::is_same_v<T, Speed> { 
+    const Speed get_speed(const Cell cell, int sec_per_step, int feet_per_cell) const requires std::is_same_v<T, Speed> { 
         return Speed(get_r8(cell), sec_per_step, feet_per_cell); }
-    const Direction get_dir(const Cell& cell) const requires std::is_same_v<T, Direction> { 
+    const Direction get_dir(const Cell cell) const requires std::is_same_v<T, Direction> { 
         return Direction(get_r8(cell)); }
 
     // this will also get setters for the agents, give it type Agents. 

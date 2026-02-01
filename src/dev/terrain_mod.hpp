@@ -12,7 +12,6 @@ public:
     constexpr TerrainMod(): val(NONE) {}
     constexpr TerrainMod(uint8_t v): val(v) { validate(); } 
 
-    constexpr bool operator==(const TerrainMod& tm) const { return val == tm.val; }
-    constexpr bool operator!=(const TerrainMod& tm) const { return val != tm.val; }
-    // TerrainMod(const Cell& cell, const Ref<Image>& img): val((img->get_pixel(cell.x,cell.y)).r * 255) { validate(); }
+    constexpr bool operator==(const TerrainMod tm) const { return val == tm.val; }
+    constexpr bool operator!=(const TerrainMod tm) const { return val != tm.val; }
 };

@@ -13,12 +13,12 @@ ConnectivityMatrix::ConnectivityMatrix(const BaseWorld& base):
     set_cmids(base);
 } 
 
-bool ConnectivityMatrix::is_walk_barrier(const BaseWorld& base, const Cell& cell, const Direction& dir) const {
+bool ConnectivityMatrix::is_walk_barrier(const BaseWorld& base, const Cell cell, const Direction dir) const {
     if (base.can_walk_at(cell) && !dir.is_none()) {return false;}
     return true;     
 }
 
-bool ConnectivityMatrix::is_drive_barrier(const BaseWorld& base, const Cell& cell, const Direction& dir) const {
+bool ConnectivityMatrix::is_drive_barrier(const BaseWorld& base, const Cell cell, const Direction dir) const {
     if (base.can_drive_at(cell) && !dir.is_none()) {return false;}
     return true;      
 }
@@ -33,7 +33,7 @@ void ConnectivityMatrix::set_barriers(const BaseWorld& base) {
     }}
 }
 
-void ConnectivityMatrix::set_cell_cmid(const BaseWorld& base, Matrix<CMID>& matrix, const Cell& cell) {
+void ConnectivityMatrix::set_cell_cmid(const BaseWorld& base, Matrix<CMID>& matrix, const Cell cell) {
     CMID& cmid = matrix.at(cell);
     if (cmid.is_barrier()) { return; }
     for (int i = 0; i < NUM_CHECK_DIR; i++) {
@@ -57,14 +57,12 @@ void ConnectivityMatrix::set_cmids(const BaseWorld& base) {
 }
 
 void ConnectivityMatrix::display_full() const {
-    print_line("==================================");
-    print_line("@CM: Display Full");
+    print_line("----------------------------------");
+    print_line("Display Full CM");
     if (!valid) {print_line("CM is invalid. Nothing to display."); return;};
-    print_line("@Walk: ");
+    print_line("Walk: ");
     walk.display_full_as_int();
-    print_line("");
-    print_line("@Drive: ");
+    print_line("Drive: ");
     drive.display_full_as_int();
-    print_line("==================================");
 }
 

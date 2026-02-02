@@ -26,3 +26,15 @@ Ref<Image> BaseWorld::emulate_image_r8(int cols, int rows, uint8_t fill, std::ve
 
     return image;
 }
+
+Ref<Image> BaseWorld::emulate_image_r8_from_matrix(Matrix<uint8_t> matrix) {
+    Ref<Image> image = Image::create(matrix.cols, matrix.rows, false, Image::FORMAT_R8);
+    
+    for (int y = 0; y < matrix.rows; y++) {
+    for (int x = 0; x < matrix.cols; x++) {
+        uint8_t value = matrix.at(Cell(x, y));
+        image->set_pixel(x, y, Color(value / 255.0, 0, 0, 1));
+    }}
+
+    return image;
+}

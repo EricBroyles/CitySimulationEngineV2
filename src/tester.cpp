@@ -107,37 +107,42 @@ void Tester::cm_tests() const {
 
     print_line("<<<<Test TT ROAD with all solo Direction (E,NE,N,NW,W,SW,S,SE)>>>>\n");
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::E));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::E -> walk 10 Direction::E groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::E -> drive 10 Direction::E groups CMID = 0,10,..,90, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::NE));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NE -> walk 10 Direction::NE groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NE -> drive 10 Direction::NE groups CMID = 0,1,..9,19,29,..99, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::N));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::N -> walk 10 Direction::N groups CMID = 0:9, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::N -> drive 10 Direction::N groups CMID = 0:9, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::NW));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NW -> walk 10 Direction::NW groups CMID = 0,1,..,9,10,20,..,90 drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::NW -> drive 10 Direction::NW groups CMID = 0,1,..,9,10,20,..,90 walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::W));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::W -> walk 10 Direction::W groups CMID = 0,10,..,90, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::W -> drive 10 Direction::W groups CMID = 0,10,..,90, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::SW));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SW -> walk 10 Direction::SW groups CMID = 0,1,..9,19,29,..99, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SW -> drive 10 Direction::SW groups CMID = 0,1,..9,19,29,..99, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::S));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::S -> walk 10 Direction::S groups CMID = 0:9, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::S -> drive 10 Direction::S groups CMID = 0:9, walk CMID = -1"); print_line("");
 
     MyConnectivityMatrix::one_tt_one_dir(10,10,TerrainType(TerrainType::ROAD),Direction(Direction::SE));
-    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SE -> walk 10 Direction::SE groups CMID = 0,1,..,9,10,20,..,90, drive CMID = -1"); print_line("");
+    print_line("[Pass: CHECK] TerrainType::ROAD, Direction::SE -> drive 10 Direction::SE groups CMID = 0,1,..,9,10,20,..,90, walk CMID = -1"); print_line("");
 
 
     print_line("<<<<Test TT Parking and Barriers with Direction All>>>>\n");
     MyConnectivityMatrix::list_tt_list_dir(5,5,{TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER},{Direction::ALL});
     print_line("[Pass: CHECK] {TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER}, Direction::ALL -> Thin Barrier example, so expect only CMID = 0 and diagonal rows of CMID = -1, same for walk and drive"); print_line("");
     
+    MyConnectivityMatrix::list_tt_list_dir(9,9,{TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER},{Direction::ALL});
+    print_line("[Pass: CHECK] {TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER}, Direction::ALL -> 3 solid vertical barriers. 3 groups present."); print_line("");
+    
 
-
-
+    print_line("<<<<Custom>>>>\n");
+    MyConnectivityMatrix::w_connection(Dir(Dir::ALL));
+    print_line("[Pass: CHECK] w_connection(Dir(Dir::ALL)) -> all one group in shape of w."); print_line("");
+    
 
 
 

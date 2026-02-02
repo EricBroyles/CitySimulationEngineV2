@@ -57,3 +57,11 @@ public:
         default : return Vec2i();}
     }
 };
+
+using Dir = Direction;
+using SDir = SoloDirection;
+
+// template<std::size_t N> using SDirArr = std::array<SDir,N>;
+using SDirArr4 = std::array<SDir,4>;
+
+

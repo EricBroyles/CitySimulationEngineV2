@@ -10,16 +10,14 @@ private:
     static constexpr std::array<bool, 7> CAN_DRIVE = {false, true, false, true, true, false, false};
     constexpr void validate() const {if (val < NONE || val >= MAX) { throw std::invalid_argument("Unknown TerrainType"); }}
 public:
-    enum TT {NONE, ROAD, WALKWAY, CROSSWALK, PARKING, BUILDING, BARRIER, MAX};
+    enum OPTIONS {NONE, ROAD, WALKWAY, CROSSWALK, PARKING, BUILDING, BARRIER, MAX};
     uint8_t val;
     constexpr TerrainType(): val(NONE) {}
     constexpr TerrainType(uint8_t v): val(v) { validate(); } 
     constexpr bool can_walk() const { return CAN_WALK[val]; }
     constexpr bool can_drive() const { return CAN_DRIVE[val]; }
-
     constexpr bool operator==(const TerrainType tt) const { return val == tt.val; }
     constexpr bool operator!=(const TerrainType tt) const { return val != tt.val; }
-
-
-
 };
+
+using TT = TerrainType;

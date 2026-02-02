@@ -6,6 +6,7 @@
 #include "speed.hpp"
 #include "direction.hpp"
 #include "image_matrix.hpp"
+#include "matrix.hpp"
 
 using namespace godot;
 
@@ -34,4 +35,5 @@ public:
 
     //emulate user data
     static Ref<Image> emulate_image_r8(int cols, int rows, uint8_t fill, std::vector<uint8_t> pop); 
+    static Ref<Image> emulate_image_r8_from_matrix(Matrix<uint8_t> matrix);
 };

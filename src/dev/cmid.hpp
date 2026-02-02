@@ -14,6 +14,10 @@ struct CMID {
     CMID& operator++() { ++val; return *this; } //++CMID only. 
     bool  operator==(const CMID other) const { return val == other.val; } 
     bool  operator!=(const CMID other) const { return val != other.val; } 
+    bool  operator<(const CMID other) const { return val < other.val; }
+    bool  operator>(const CMID other) const { return val > other.val; }
+    bool  operator<=(const CMID other) const { return val <= other.val; }
+    bool  operator>=(const CMID other) const { return val >= other.val; }
     constexpr explicit operator int() const { return val; }
 };
 

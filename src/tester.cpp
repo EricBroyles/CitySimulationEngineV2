@@ -30,7 +30,6 @@ void Tester::_bind_methods() {
 void Tester::cm_tests() const {
     print_line("==================================");
     print_line("@Test: Connectivity Matrix in World");
-    bool pass;
 
 
     print_line("<<<<Test all TT with Direction ALL>>>>\n");
@@ -132,39 +131,22 @@ void Tester::cm_tests() const {
 
 
     print_line("<<<<Test TT Parking and Barriers with Direction All>>>>\n");
-    MyConnectivityMatrix::list_tt_list_dir(5,5,{TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER},{Direction::ALL});
-    print_line("[Pass: CHECK] {TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER}, Direction::ALL -> Thin Barrier example, so expect only CMID = 0 and diagonal rows of CMID = -1, same for walk and drive"); print_line("");
+    MyConnectivityMatrix::list_tt_list_dir(5,5,{TT::PARKING, TT::PARKING, TT::BARRIER},{Direction::ALL});
+    print_line("[Pass: CHECK] {TT::PARKING, TT::PARKING, TT::BARRIER}, Direction::ALL -> Thin Barrier example, so expect only CMID = 0 and diagonal rows of CMID = -1, same for walk and drive"); print_line("");
     
-    MyConnectivityMatrix::list_tt_list_dir(9,9,{TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER},{Direction::ALL});
-    print_line("[Pass: CHECK] {TerrainType::PARKING, TerrainType::PARKING, TerrainType::BARRIER}, Direction::ALL -> 3 solid vertical barriers. 3 groups present."); print_line("");
+    MyConnectivityMatrix::list_tt_list_dir(9,9,{TT::PARKING, TT::PARKING, TT::BARRIER},{Direction::ALL});
+    print_line("[Pass: CHECK] {TT::PARKING, TT::PARKING, TT::BARRIER}, Direction::ALL -> 3 solid vertical barriers. 3 groups present."); print_line("");
     
 
     print_line("<<<<Custom>>>>\n");
     MyConnectivityMatrix::w_connection(Dir(Dir::ALL));
     print_line("[Pass: CHECK] w_connection(Dir(Dir::ALL)) -> all one group in shape of w."); print_line("");
     
-
-
-
+    MyConnectivityMatrix::bottom_leak(Dir(Dir::ALL));
+    print_line("[Pass: CHECK] bottom_leak(Dir(Dir::ALL)) -> all one group. with a barrier at col idx = 2"); print_line("");
 
     
-
     print_line("==================================\n");
-    // walkway, crosswalk, parking, building
-    // road, crosswalk, parking
-    // barrier
-
-    // no direction
-    // all directions
-
-
-
-    // random dir and 
-    // Test 10x10 no directions, all walkway
-    // Test 10x10 no directions, all road
-    // Test 10x10 no directions, 
-    // Test 10x10 up arrows
-    // Teste 10x10 
 }
 
 void Tester::cmid_tests() const {
@@ -172,7 +154,6 @@ void Tester::cmid_tests() const {
     print_line("@Test: CMID");
     int passed = 0, total = 0; bool pass;
 
-    // Test 1-3: Construction and constants
     total++; pass = true;
     {
         CMID default_id;
@@ -187,7 +168,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] Construction and constant values", pass));
 
-    // Test 4-5: Validity checks
     total++; pass = true;
     {
         CMID invalid_id;
@@ -202,7 +182,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] is_valid() and is_invalid() checks", pass));
 
-    // Test 6: Barrier check
     total++; pass = true;
     {
         CMID barrier_id(CMID::BARRIER);
@@ -215,7 +194,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] is_barrier() check", pass));
 
-    // Test 7-8: invalidate() and barrier() methods
     total++; pass = true;
     {
         CMID id(5);
@@ -231,7 +209,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] invalidate() and barrier() methods", pass));
 
-    // Test 9: Prefix increment operator
     total++; pass = true;
     {
         CMID id(5);
@@ -241,7 +218,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] Prefix increment operator (++id)", pass));
 
-    // Test 10: Equality operator
     total++; pass = true;
     {
         CMID id1(5);
@@ -257,7 +233,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] Equality operator (==)", pass));
 
-    // Test 11: Edge cases - boundary values
     total++; pass = true;
     {
         CMID zero_id(0);
@@ -270,7 +245,6 @@ void Tester::cmid_tests() const {
     if (pass) passed++;
     print_line(vformat("[Pass: %s] Boundary values (0, negative, large positive)", pass));
 
-    // Test 12: Increment from various states
     total++; pass = true;
     {
         CMID from_barrier(CMID::BARRIER);

@@ -1,6 +1,5 @@
 #pragma once
 #include <stdexcept>
-// #include <godot_cpp/classes/image.hpp>
 #include "vec.hpp"
 #include "cell.hpp"
 
@@ -60,8 +59,14 @@ public:
 
 using Dir = Direction;
 using SDir = SoloDirection;
-
-// template<std::size_t N> using SDirArr = std::array<SDir,N>;
-using SDirArr4 = std::array<SDir,4>;
+using SDirArr4 = std::array<SDir,4>; // template<std::size_t N> using SDirArr = std::array<SDir,N>;
+constexpr SoloDirection EAST = SDir(Dir::E);
+constexpr SoloDirection WEST = SDir(Dir::W);
+constexpr SoloDirection NORTH = SDir(Dir::N);
+constexpr SoloDirection SOUTH = SDir(Dir::S);
+constexpr SoloDirection NORTHEAST = SDir(Dir::NE);
+constexpr SoloDirection NORTHWEST = SDir(Dir::NW);
+constexpr SoloDirection SOUTHEAST = SDir(Dir::SE);
+constexpr SoloDirection SOUTHWEST = SDir(Dir::SW);
 
 

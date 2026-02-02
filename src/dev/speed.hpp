@@ -5,7 +5,6 @@
 * conversion: (mile/hour) (feet/mile) (cell/feet) (hour/sec) (sec/step)
 */
 #pragma once
-// #include <godot_cpp/classes/image.hpp>
 #include "cell.hpp"
 
 struct Speed {
@@ -15,7 +14,6 @@ struct Speed {
     constexpr Speed(): val(0.0f) {}
     constexpr Speed(float speed): val(speed) {}
     constexpr Speed(int mph, int sec_per_step, int feet_per_cell): val(mph * (FEET_PER_MILE / feet_per_cell) * HOUR_PER_SEC * sec_per_step) {}
-
     constexpr bool operator==(const Speed speed) const { return val == speed.val; }
     constexpr bool operator!=(const Speed speed) const { return val != speed.val; }
 };

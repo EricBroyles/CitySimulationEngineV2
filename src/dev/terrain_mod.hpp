@@ -1,6 +1,5 @@
 #pragma once
 #include <stdexcept>
-// #include <godot_cpp/classes/image.hpp>
 #include "cell.hpp"
 
 struct TerrainMod {

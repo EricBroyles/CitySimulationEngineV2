@@ -24,12 +24,12 @@ public:
     constexpr Matrix(): Matrix(0,0) {}
     constexpr Matrix(int c, int r): cols(c), rows(r), data(c*r) {} //data filled with T()
     constexpr Matrix(int c, int r, std::vector<T> flat_matrix): cols(c), rows(r), data(flat_matrix) {}
-    // constexpr Matrix(int c, int r, std::vector<std::vector<T>> matrix): cols(c), rows(r), data(c*r) {
-    //     for (int row = 0; row < r; row++) {
-    //     for (int col = 0; col < c; col++) {
-    //         data[row * c + col] = matrix[row][col];
-    //     }}
-    // }
+    constexpr Matrix(std::vector<std::vector<T>> matrix): cols(matrix[0].size()), rows(matrix.size()), data(matrix[0].size()*matrix.size()) {
+        for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            data[r * c + c] = matrix[r][c];
+        }}
+    }
     T& at(const Cell cell) { return data.at(cell.to_idx(cols)); } 
     const T& at(const Cell cell) const { return data.at(cell.to_idx(cols)); } 
     void display_full_as_int() const {

@@ -1,6 +1,5 @@
 #pragma once
 #include <stdexcept>
-// #include <godot_cpp/classes/image.hpp>
 #include <array>
 #include "cell.hpp"
 

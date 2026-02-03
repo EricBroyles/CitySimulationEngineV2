@@ -1,0 +1,6 @@
+Tuesday (2/3/26):
+- Wrap timing experiments into my_timing_experiments, just make exp2, then have generic tests, call all from tester.
+- make BaseWorld use Matrixes instead of ImageMatrix.
+- test the speed of CM (currently it is 5799.75 ms)
+- depricate ImageMatrix.
+- can_walk_between and can_drive_between

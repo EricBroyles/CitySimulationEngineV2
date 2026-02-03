@@ -1,3 +1,23 @@
+
+TT Matrix: R8, uint8 -> val
+TM Matrix: R8, uint8 -> val
+Direction Matrix: R8, uint8 -> val
+Speed Matrix: R8, uint8, sec_pre_step, feet_per_step -> val
+
+Agents:
+ID: 4096, RGBA8, int32 -> val
+other information packed in 256x256
+
+I want to convert speed, tt, tm, direction into matrix of their respective values.
+change ImageMatrix to wrap a Matrix let this handle the conversions
+
+Matrix::create_speed_matrix -> Matrix<Speed> //handle the neccisary checks R8 inputs...
+
+
+
+
+
+
 TODO:
 * put timing stuff into my_timing and make it more organized. (add a test to explicitly show the time to go Image to Matrix, and Matrix to ImageTexture)
 * can walk between and can drive between
@@ -11,9 +31,7 @@ CM: currently it is aroun 5.5 seconds
 * can reduce the amount of checks by looping over inside, then looping over edges. dont need to check the corners.
 
 Agents:
-* do not need to have an image. instead store Matrix<...> that gets directly converted into an ImageTexture
-* I can take a Matrix<...> and directly convert it into a ImageTexture.
-* How to convert ...
+* I think I still need an image just update from a bitarray.
 
 
 

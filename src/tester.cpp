@@ -12,6 +12,7 @@
 #include "dev\cmid.hpp"
 #include "tests\my_connectivity_matrix.hpp"
 #include <godot_cpp/classes/image_texture.hpp>
+#include "tests\my_timing_experiments.hpp"
 
 using namespace godot;
 
@@ -31,6 +32,10 @@ void Tester::_bind_methods() {
 }
 
 void Tester::timing() const {
+    {
+        MyTimingExperiments::exp1_tech1();
+        MyTimingExperiments::exp1_tech2();
+    }
     {
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < 4096; i++) {

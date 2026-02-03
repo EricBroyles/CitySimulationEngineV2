@@ -1,9 +1,13 @@
 #pragma once
 #include <stdexcept>
+#include <godot_cpp/classes/image.hpp>
 #include "vec.hpp"
 #include "cell.hpp"
 
+using namespace godot;
+
 struct Direction {
+    static constexpr Image::Format IMAGE_FORMAT = Image::FORMAT_R8;
     static constexpr int NUM_DIR = 8;
     static constexpr uint8_t NONE = 0b00000000;
     static constexpr uint8_t E    = 0b00000001;
@@ -17,7 +21,7 @@ struct Direction {
     static constexpr uint8_t ALL  = 0b11111111;
     uint8_t val;
     constexpr Direction(): Direction(NONE) {}
-    constexpr Direction(uint8_t v): val(v) {}
+    constexpr explicit Direction(uint8_t v): val(v) {} //explicit refers to static_cast<Direction>
     constexpr bool is_none() const { return val == NONE; }
     constexpr int count() const { 
         int count = 0; uint8_t v = val; while(v){count += v & 1; v >>= 1;} return count;}

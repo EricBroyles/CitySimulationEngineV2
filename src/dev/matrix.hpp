@@ -50,17 +50,7 @@ public:
 
     constexpr Matrix(int c, int r, std::vector<T> flat_matrix): 
         cols(c), rows(r), data(flat_matrix) {}
-
-    static Matrix<Speed> create_direction_matrix(const Ref<Image> direction_image) {
-        if (direction_image->get_format() != Direction::IMAGE_FORMAT) {
-            throw std::invalid_argument("Incorrect direction_image format.");}
-        Matrix<Direction> result(direction_image->get_width(), direction_image->get_height());
-        PackedByteArray byte_array = direction_image->get_data();
-        for (int i = 0; i < byte_array.size(); i++) {
-            result.data[i] = Direction(byte_array[i]);}
-        return result;
-    }
-
+        
     T& at(int c, int r) { 
         return data.at(r*cols + c); 
     } 

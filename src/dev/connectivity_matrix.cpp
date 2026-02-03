@@ -1,5 +1,6 @@
 #include "connectivity_matrix.hpp"
 #include <array>
+#include <unordered_set> 
 #include "cell.hpp"
 #include "matrix.hpp"
 #include "direction.hpp"
@@ -9,9 +10,11 @@
 using namespace godot;
 
 CM::ConnectivityMatrix(const BaseWorld& base): 
-    valid(true), walk(base.cols, base.rows), drive(base.cols, base.rows) {
+    valid(true), walk(base.cols, base.rows), drive(base.cols, base.rows), walk_has_barrier(false), drive_has_barrier(false), num_walk_groups(0), num_drive_groups(0) {
     set_barriers(base);
     set_cmids(base);
+    num_walk_groups = count_matrix_groups(walk, walk_has_barrier);
+    num_drive_groups = count_matrix_groups(drive, drive_has_barrier);
 } 
 
 bool CM::is_walk_barrier(const BaseWorld& base, const Cell cell, const Dir dir) const {
@@ -29,8 +32,18 @@ void CM::set_barriers(const BaseWorld& base) {
     for (int c = 0; c < base.cols; c++) {
         Cell cell = Cell(c,r);
         Dir dir  = base.get_dir(cell);
-        walk.at(cell) = is_walk_barrier(base, cell, dir)  ? CMID(CMID::BARRIER) : CMID(cell.to_idx(base.cols));
-        drive.at(cell) = is_drive_barrier(base, cell, dir) ? CMID(CMID::BARRIER) : CMID(cell.to_idx(base.cols));
+
+        if (is_walk_barrier(base, cell, dir)) {
+            walk.at(cell) = CMID(CMID::BARRIER);
+            walk_has_barrier = true;
+        } 
+        else { walk.at(cell) = CMID(cell.to_idx(base.cols)); }
+        
+        if (is_drive_barrier(base, cell, dir)) {
+            drive.at(cell) = CMID(CMID::BARRIER);
+            drive_has_barrier = true;
+        } 
+        else { drive.at(cell) = CMID(cell.to_idx(base.cols)); }
     }}
 }
 
@@ -82,6 +95,13 @@ void CM::resolve_cell(const BaseWorld& base, Matrix<CMID>& matrix, const Cell ce
             matrix.at(adj_cell) = smallest;
         }
     }
+}
+
+int CM::count_matrix_groups(const Matrix<CMID>& matrix, bool has_barrier) {
+    // assumes no invalid inside set
+    // barrier cmid do not count as a group.
+    const std::unordered_set<int>& unique_ints = matrix.to_unique_ints();
+    return unique_ints.size() - int(has_barrier);
 }
 
 void CM::display_full() const {

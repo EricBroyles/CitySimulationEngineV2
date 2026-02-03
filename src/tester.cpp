@@ -11,6 +11,7 @@
 #include "dev\world.hpp"
 #include "dev\cmid.hpp"
 #include "tests\my_connectivity_matrix.hpp"
+#include <godot_cpp/classes/image_texture.hpp>
 
 using namespace godot;
 
@@ -25,8 +26,255 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
     ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
     ClassDB::bind_method(D_METHOD("cm_tests"), &Tester::cm_tests);
+    ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
 
 }
+
+void Tester::timing() const {
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < 4096; i++) {
+        for (int j = 0; j < 4096; j++) {
+            volatile int dummy = i * j;
+        }}
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("4096x4096 loop completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        // Constant pixel value to check against
+        float pixel_value = 0.5f;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int y = 0; y < 4096; y++) {
+            for (int x = 0; x < 4096; x++) {
+                // Do 8 checks on the constant pixel value
+                volatile bool check1 = (pixel_value > 0.5f);
+                volatile bool check2 = (pixel_value < 0.3f);
+                volatile bool check3 = (pixel_value == 0.0f);
+                volatile bool check4 = (pixel_value >= 0.7f);
+                volatile bool check5 = (pixel_value <= 0.2f);
+                volatile bool check6 = (pixel_value != 1.0f);
+                volatile bool check7 = (pixel_value > 0.1f && pixel_value < 0.9f);
+                volatile bool check8 = (pixel_value == 1.0f || pixel_value == 0.0f);
+            }
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("4096x4096 iterations with 8 checks per pixel completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int y = 0; y < 4096; y++) {
+            for (int x = 0; x < 4096; x++) {
+                // Do 8 checks on each pixel
+                Color pixel = img->get_pixel(x, y);
+                
+                volatile bool check1 = (pixel.r > 0.5f);
+                volatile bool check2 = (pixel.r < 0.3f);
+                volatile bool check3 = (pixel.r == 0.0f);
+                volatile bool check4 = (pixel.r >= 0.7f);
+                volatile bool check5 = (pixel.r <= 0.2f);
+                volatile bool check6 = (pixel.r != 1.0f);
+                volatile bool check7 = (pixel.r > 0.1f && pixel.r < 0.9f);
+                volatile bool check8 = (pixel.r == 1.0f || pixel.r == 0.0f);
+            }
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("4096x4096 image with 8 checks per pixel completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        const Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int y = 0; y < 4096; y++) {
+            for (int x = 0; x < 4096; x++) {
+                // Do 8 checks on each pixel
+                const Color pixel = img->get_pixel(x, y);
+                
+                volatile bool check1 = (pixel.r > 0.5f);
+                volatile bool check2 = (pixel.r < 0.3f);
+                volatile bool check3 = (pixel.r == 0.0f);
+                volatile bool check4 = (pixel.r >= 0.7f);
+                volatile bool check5 = (pixel.r <= 0.2f);
+                volatile bool check6 = (pixel.r != 1.0f);
+                volatile bool check7 = (pixel.r > 0.1f && pixel.r < 0.9f);
+                volatile bool check8 = (pixel.r == 1.0f || pixel.r == 0.0f);
+            }
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("const 4096x4096 image with 8 checks per pixel completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < 256 * 256; i++) {
+            // Calculate x, y coordinates in the 4096 image
+            int x = i % 4096;
+            int y = i / 4096;
+            
+            // Read from the image
+            Color pixel = img->get_pixel(x, y);
+            float value = pixel.r;
+            
+            // Do 8 checks
+            volatile bool check1 = (value > 0.5f);
+            volatile bool check2 = (value < 0.3f);
+            volatile bool check3 = (value == 0.0f);
+            volatile bool check4 = (value >= 0.7f);
+            volatile bool check5 = (value <= 0.2f);
+            volatile bool check6 = (value != 1.0f);
+            volatile bool check7 = (value > 0.1f && value < 0.9f);
+            volatile bool check8 = (value == 1.0f || value == 0.0f);
+            
+            // Set a value back to the image
+            img->set_pixel(x, y, Color(0.75f, 0.0f, 0.0f));
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("Simulate agents: 256x256 iterations (read, 8 checks, write to 4096 image) completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+        auto start = std::chrono::high_resolution_clock::now();
+        std::vector<uint8_t> pixel_data;
+        pixel_data.reserve(4096 * 4096);  // Pre-allocate for efficiency
+        for (int y = 0; y < 4096; y++) {
+            for (int x = 0; x < 4096; x++) {
+                Color pixel = img->get_pixel(x, y);
+                uint8_t value = static_cast<uint8_t>(pixel.r * 255.0f);
+                pixel_data.push_back(value);
+            }
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("R8 image to vector<uint8_t> conversion completed in %.2f ms", duration.count() / 1000.0));
+        print_line(vformat("Vector size: %d elements", pixel_data.size()));
+    }
+
+    {
+        // Create a 4096x4096 R8 image
+        Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+        
+        auto start = std::chrono::high_resolution_clock::now();
+        
+        // Get the raw data as PackedByteArray
+        PackedByteArray byte_array = img->get_data();
+        
+        // Convert to std::vector
+        std::vector<uint8_t> pixel_data(byte_array.ptr(), byte_array.ptr() + byte_array.size());
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        
+        print_line(vformat("Image to vector (using get_data) completed in %.2f ms", duration.count() / 1000.0));
+        print_line(vformat("Vector size: %d elements", pixel_data.size()));
+    }
+
+    {
+        std::vector<uint8_t> pixel_data(4096 * 4096, 128);  // Initialize with value 128
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < 4096 * 4096; i++) {
+            uint8_t value = pixel_data[i];
+            
+            // Do 8 checks
+            volatile bool check1 = (value > 127);
+            volatile bool check2 = (value < 76);
+            volatile bool check3 = (value == 0);
+            volatile bool check4 = (value >= 178);
+            volatile bool check5 = (value <= 51);
+            volatile bool check6 = (value != 255);
+            volatile bool check7 = (value > 25 && value < 230);
+            volatile bool check8 = (value == 255 || value == 0);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("Reading from vector (4096x4096) with 8 checks completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        const std::vector<uint8_t> pixel_data(4096 * 4096, 128);  // Initialize with value 128
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < 4096 * 4096; i++) {
+            const uint8_t value = pixel_data[i];
+            
+            // Do 8 checks
+            volatile bool check1 = (value > 127);
+            volatile bool check2 = (value < 76);
+            volatile bool check3 = (value == 0);
+            volatile bool check4 = (value >= 178);
+            volatile bool check5 = (value <= 51);
+            volatile bool check6 = (value != 255);
+            volatile bool check7 = (value > 25 && value < 230);
+            volatile bool check8 = (value == 255 || value == 0);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        print_line(vformat("Reading from const vector (4096x4096) with 8 checks completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        // Create a vector of 4096x4096 uint8_t values
+        std::vector<uint8_t> pixel_data(4096 * 4096, 128);  // Initialize with value 128
+        
+        auto start = std::chrono::high_resolution_clock::now();
+        
+        for (int i = 0; i < 256 * 256; i++) {
+            // Read from the vector
+            uint8_t value = pixel_data[i];
+            
+            // Do 8 checks
+            volatile bool check1 = (value > 127);
+            volatile bool check2 = (value < 76);
+            volatile bool check3 = (value == 0);
+            volatile bool check4 = (value >= 178);
+            volatile bool check5 = (value <= 51);
+            volatile bool check6 = (value != 255);
+            volatile bool check7 = (value > 25 && value < 230);
+            volatile bool check8 = (value == 255 || value == 0);
+            
+            // Write back to the vector
+            pixel_data[i] = 192;
+        }
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        
+        print_line(vformat("256x256 iterations (read, 8 checks, write to vector) completed in %.2f ms", duration.count() / 1000.0));
+    }
+
+    {
+        // Create a vector of 4096x4096 uint8_t values
+        std::vector<uint8_t> pixel_data(4096 * 4096, 128);
+        
+        auto start = std::chrono::high_resolution_clock::now();
+        
+        // Create PackedByteArray from vector
+        PackedByteArray byte_array;
+        byte_array.resize(pixel_data.size());
+        memcpy(byte_array.ptrw(), pixel_data.data(), pixel_data.size());
+        
+        // Create Image from raw data
+        Ref<Image> img = Image::create_from_data(4096, 4096, false, Image::FORMAT_R8, byte_array);
+        
+        // Create texture from image
+        Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        
+        print_line(vformat("Vector to texture conversion completed in %.2f ms", duration.count() / 1000.0));
+   
+    }
+
+}
+
 void Tester::cm_tests() const {
     print_line("==================================");
     print_line("@Test: Connectivity Matrix in World");
@@ -145,6 +393,9 @@ void Tester::cm_tests() const {
     MyConnectivityMatrix::bottom_leak(Dir(Dir::ALL));
     print_line("[Pass: CHECK] bottom_leak(Dir(Dir::ALL)) -> all one group. with a barrier at col idx = 2"); print_line("");
 
+    print_line("<<<<Time trials>>>>\n");
+    MyConnectivityMatrix::one_tt_one_dir(4096,4096,TT(TT::PARKING),Dir(Dir::ALL),false);
+    print_line("[Pass: CHECK] I want the time to be less than 30 ms"); print_line("");
     
     print_line("==================================\n");
 }

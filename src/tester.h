@@ -50,4 +50,5 @@ public:
     void world_tests() const;
     void cmid_tests() const;
     void cm_tests() const;
+    void timing() const;
 };

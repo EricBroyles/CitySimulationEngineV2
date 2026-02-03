@@ -11,6 +11,7 @@ const_mat.at(Cell(5, 5)) = 99;      // ERROR: can't modify through const T&
 */
 #pragma once
 #include <vector>
+#include <unordered_set> 
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include "cell.hpp"
@@ -19,19 +20,46 @@ using namespace godot;
 
 template <typename T> class Matrix {
     std::vector<T> data;
+
 public:
     int cols, rows;
-    constexpr Matrix(): Matrix(0,0) {}
-    constexpr Matrix(int c, int r): cols(c), rows(r), data(c*r) {} //data filled with T()
-    constexpr Matrix(int c, int r, std::vector<T> flat_matrix): cols(c), rows(r), data(flat_matrix) {}
-    constexpr Matrix(std::vector<std::vector<T>> matrix): cols(matrix[0].size()), rows(matrix.size()), data(matrix[0].size()*matrix.size()) {
+
+    constexpr Matrix(): 
+        Matrix(0,0) {}
+
+    constexpr Matrix(int c, int r): 
+        cols(c), rows(r), data(c*r) {} //data filled with T()
+
+    constexpr Matrix(int c, int r, std::vector<T> flat_matrix): 
+        cols(c), rows(r), data(flat_matrix) {}
+
+    constexpr Matrix(std::vector<std::vector<T>> matrix): 
+        cols(matrix[0].size()), rows(matrix.size()), data(matrix[0].size()*matrix.size()) {
         for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
             data[r * c + c] = matrix[r][c];
         }}
     }
-    T& at(const Cell cell) { return data.at(cell.to_idx(cols)); } 
-    const T& at(const Cell cell) const { return data.at(cell.to_idx(cols)); } 
+
+    T& at(const Cell cell) { 
+        return data.at(cell.to_idx(cols)); 
+    } 
+
+    const T& at(const Cell cell) const { 
+        return data.at(cell.to_idx(cols)); 
+    } 
+
+    const std::unordered_set<int>& to_unique_ints() const {
+        //converts the T to an int and adds it to a set
+        std::unordered_set<int> unique_ints;
+        for (const T& item : data) { unique_ints.insert(static_cast<int>(item)); }
+        return unique_ints;
+    }
+
+    int count_unique_ints() const { 
+        return to_unique_ints().size();
+    }
+
     void display_full_as_int() const {
         for (int r = 0; r < rows; r++) {
             String line = "[";

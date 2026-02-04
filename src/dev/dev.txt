@@ -1,3 +1,36 @@
+Godot:
+
+var input: InputPackage = InputPackage.new()
+input.set_image_matrices(tt,tm,dir,speed)
+input.set_sec_per_step(...)
+input.set_feet_per_cell(...)
+input.set_num_steps(...)
+input.set_num_humans(...)
+input.set_personal_vehicle_ownership_rate(...)
+var sim: Simulation = Simulation.new()
+sim.setup(input)
+Loop until sim.is_done() {
+    var output: OutputPackage = sim.step()
+    output.get_agents_image() -> use this to update the texture and send to shader
+}
+
+C++ (Image Data)
+InputPackage: set in godot, get in C++
+* Recieves Godot::Image -> stores as ImageMatrix<type> -> getters return Matrix<type>
+
+ImageMatrix<type>
+* used to enforce a type to an Image with data of a specific type
+
+OutputPackage: set in C++, get in godot
+* Recieves a Matrix<type> -> stores as ImageMatrix<type> -> getters return godot::Image
+
+
+
+
+
+
+
+
 
 TT Matrix: R8, uint8 -> val
 TM Matrix: R8, uint8 -> val

@@ -104,13 +104,14 @@ int CM::count_matrix_groups(const Matrix<CMID>& matrix, bool has_barrier) {
     return unique_ints.size() - int(has_barrier);
 }
 
-void CM::display_full() const {
-    print_line("----------------------------------");
-    print_line("Display Full CM");
-    if (!valid) {print_line("CM is invalid. Nothing to display."); return;};
-    print_line("Walk: ");
-    walk.display_full_as_int();
-    print_line("Drive: ");
-    drive.display_full_as_int();
-}
+// void CM::display_full() const {
+//     /*REMOVE THIS*/
+//     print_line("----------------------------------");
+//     print_line("Display Full CM");
+//     if (!valid) {print_line("CM is invalid. Nothing to display."); return;};
+//     print_line("Walk: ");
+//     walk.display_full_as_int();
+//     print_line("Drive: ");
+//     drive.display_full_as_int();
+// }
 

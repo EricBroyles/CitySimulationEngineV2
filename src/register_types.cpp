@@ -7,7 +7,9 @@
 // #include "example_class.h" remove
 // #include "modify_img_update_tex.h" remove
 // #include "simulation.h"
+#include "input_package.hpp"
 #include "tester.h"
+
 // ADD HERE 1/2.
 
 using namespace godot;
@@ -19,6 +21,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	// GDREGISTER_CLASS(ExpModifyImgUpdateTex); remove
 	// GDREGISTER_CLASS(Simulation);
 	GDREGISTER_CLASS(Tester);
+	GDREGISTER_CLASS(InputPackage);
 	//ADD HERE 2/2.
 }
 

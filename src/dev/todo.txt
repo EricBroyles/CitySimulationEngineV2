@@ -1,6 +1,33 @@
+
+remove the display from inside the classes matrix and cm. (put inside tester only.)
+
+
+Current Commit 
++ InputPackage
++ add 4 Matrix constructors from tt,tm,dir,mph ImageMatrix<type>
+
++ fix the matrix so it take in MPH
+- depricate old base world & world
+- depriacte old cm
++ new base world to take in Input and create Matrix<type>
++ new cm will take in new base world and use matrix
++ new world to take in input package and create the base world and the cm from base_world
+
+
+- depricate old base world and world.
+- depriacte old cm
++ create new world and base world to use input package, construct matrix<type> from input package.
++ create cm from 
+
 Tuesday (2/3/26):
+- added mph
+- Input and Output classes. get rid of Baseworld, pass in Input to World. 
+
+
+
 - Wrap timing experiments into my_timing_experiments, just make exp2, then have generic tests, call all from tester.
 - make BaseWorld use Matrixes instead of ImageMatrix.
 - test the speed of CM (currently it is 5799.75 ms)
 - depricate ImageMatrix.
 - can_walk_between and can_drive_between
+- remove BaseWorld data emulators and move into better my_data_emulator class

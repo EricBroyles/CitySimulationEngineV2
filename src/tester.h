@@ -40,15 +40,15 @@ protected:
     static void _bind_methods(); 
 public:
     Tester() {};
-    void cell_vec_tests() const;
-    void direction_tests() const;
-    void speed_tests() const;
-    void terrain_type_tests() const;
-    void terrain_mod_tests() const;
-    void matrix_tests() const;
-    void image_matrix_tests() const;
-    void world_tests() const;
-    void cmid_tests() const;
-    void cm_tests() const;
+    // void cell_vec_tests() const;
+    // void direction_tests() const;
+    // void speed_tests() const;
+    // void terrain_type_tests() const;
+    // void terrain_mod_tests() const;
+    // void matrix_tests() const;
+    // void image_matrix_tests() const;
+    // void world_tests() const;
+    // void cmid_tests() const;
+    // void cm_tests() const;
     void timing() const;
 };

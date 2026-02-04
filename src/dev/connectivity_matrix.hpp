@@ -40,7 +40,9 @@ public:
     int num_drive_groups;
     ConnectivityMatrix(): valid(false), walk(), drive(), walk_has_barrier(false), drive_has_barrier(false), num_walk_groups(0), num_drive_groups(0) {}
     ConnectivityMatrix(const BaseWorld& base);
-    void display_full() const;
+    const Matrix<CMID>& get_walk() const { return walk; }
+    const Matrix<CMID>& get_drive() const { return drive; }
+    // void display_full() const;
 };
 
 using CM = ConnectivityMatrix;

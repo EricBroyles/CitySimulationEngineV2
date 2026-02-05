@@ -10,7 +10,7 @@
 using namespace godot;
 
 CM::ConnectivityMatrix(const BaseWorld& base): 
-    valid(true), walk(base.cols, base.rows), drive(base.cols, base.rows), walk_has_barrier(false), drive_has_barrier(false), num_walk_groups(0), num_drive_groups(0) {
+    valid(true), walk(base.cols, base.rows), drive(base.cols, base.rows) {
     set_barriers(base);
     set_cmids(base);
     num_walk_groups = count_matrix_groups(walk, walk_has_barrier);
@@ -98,20 +98,10 @@ void CM::resolve_cell(const BaseWorld& base, Matrix<CMID>& matrix, const Cell ce
 }
 
 int CM::count_matrix_groups(const Matrix<CMID>& matrix, bool has_barrier) {
-    // assumes no invalid inside set
+    // assumes no CMID::INVALID inside set
     // barrier cmid do not count as a group.
     const std::unordered_set<int>& unique_ints = matrix.to_unique_ints();
     return unique_ints.size() - int(has_barrier);
 }
 
-// void CM::display_full() const {
-//     /*REMOVE THIS*/
-//     print_line("----------------------------------");
-//     print_line("Display Full CM");
-//     if (!valid) {print_line("CM is invalid. Nothing to display."); return;};
-//     print_line("Walk: ");
-//     walk.display_full_as_int();
-//     print_line("Drive: ");
-//     drive.display_full_as_int();
-// }
 

@@ -2,7 +2,7 @@ Wednesday (2/4/2026):
 + Tests: rewrite tests that work with new World setup. (Done)
 + Tests for cm should result in a pass/fail output (Done)
 + check for easy performance enhancement, copying too many times.
-- Cleanup code: remove unneeded comments, remove unneeded dependencies.
+- Cleanup code: remove unneeded comments, remove unneeded dependencies. (Done)
 + can_walk_between and can_drive_between
 
 

@@ -1,5 +1,3 @@
-// add in ability to print a matrix of ints, add in the ability to print a matrix next to another matrix.
-
 #pragma once 
 #include <godot_cpp/variant/string.hpp>
 #include "../dev/matrix.hpp"

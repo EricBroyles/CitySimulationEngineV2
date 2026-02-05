@@ -43,7 +43,7 @@ struct MyTimingExperiments {
     }
 
     static void display_duration(const String& msg, TimePoint start) {
-        print_line(vformat("%s %.2f", msg, duration_ms(start, now())));
+        print_line(vformat("%s %.2f ms", msg, duration_ms(start, now())));
     }
 
 };

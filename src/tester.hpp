@@ -35,5 +35,13 @@ protected:
     static void _bind_methods(); 
 public:
     Tester() {};
+    void cell_vec() const;
+    void speed() const;
+    void direction() const;
+    void terrain_mod() const;
+    void terrain_type() const;
+    void matrix() const;
+    void cmid() const;
     void construct_cm() const;
+    void benchmark_cm() const;
 };

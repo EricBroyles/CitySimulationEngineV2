@@ -26,7 +26,8 @@ struct Speed {
     float val; // cell per step
     constexpr Speed(): val(0.0f) {}
     constexpr explicit Speed(float speed): val(speed) {}
-    constexpr Speed(MPH mph, int sec_per_step, int feet_per_cell): val(mph.val * (FEET_PER_MILE / feet_per_cell) * HOUR_PER_SEC * sec_per_step) {}
+    constexpr Speed(MPH mph, int sec_per_step, int feet_per_cell): 
+        val(mph.val * (FEET_PER_MILE / feet_per_cell) * HOUR_PER_SEC * sec_per_step) {}
     constexpr bool operator==(const Speed speed) const { return val == speed.val; }
     constexpr bool operator!=(const Speed speed) const { return val != speed.val; }
 };

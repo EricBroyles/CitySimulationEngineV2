@@ -5,7 +5,6 @@
 #include "terrain_mod.hpp"
 #include "speed.hpp"
 #include "direction.hpp"
-// #include "image_matrix.hpp"
 #include "matrix.hpp"
 #include "../input_package.hpp"
 
@@ -33,8 +32,4 @@ public:
     const Direction get_dir(const Cell cell) const { return dir.at(cell); }
     bool can_walk_at(const Cell cell) const { return get_tt(cell).can_walk(); }
     bool can_drive_at(const Cell cell) const { return get_tt(cell).can_drive(); }
-
-    //emulate user data
-    // static Ref<Image> emulate_image_r8(int cols, int rows, uint8_t fill, std::vector<uint8_t> pop); 
-    // static Ref<Image> emulate_image_r8_from_matrix(Matrix<uint8_t> matrix);
 };

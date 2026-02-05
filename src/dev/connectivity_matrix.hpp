@@ -24,9 +24,9 @@ class ConnectivityMatrix {
     static constexpr SDirArr4 DOWN_DIRS = {SDir(Dir::SE), SDir(Dir::S), SDir(Dir::SW), SDir(Dir::E)};
     Matrix<CMID> walk;
     Matrix<CMID> drive;
-    bool walk_has_barrier; // this is needed to efficiently count the num_walk_groups (by subtracting the BARRIER group from the num_walk_groups)
-    bool drive_has_barrier; 
-    bool valid;
+    bool walk_has_barrier = false; //needed to count num groups
+    bool drive_has_barrier = false; 
+    bool valid = false;
     bool is_walk_barrier(const BaseWorld& base, const Cell cell, const Dir dir) const;
     bool is_drive_barrier(const BaseWorld& base, const Cell cell, const Dir dir) const;
     void set_barriers(const BaseWorld& base);
@@ -36,13 +36,12 @@ class ConnectivityMatrix {
     void resolve_cell(const BaseWorld& base, Matrix<CMID>& matrix, const Cell cell, const SDirArr4& cell_sdirs, const SDirArr4& adj_sdirs);
     int count_matrix_groups(const Matrix<CMID>& matrix, bool has_barrier);
 public:
-    int num_walk_groups;
-    int num_drive_groups;
-    ConnectivityMatrix(): valid(false), walk(), drive(), walk_has_barrier(false), drive_has_barrier(false), num_walk_groups(0), num_drive_groups(0) {}
+    int num_walk_groups = 0;
+    int num_drive_groups = 0;
+    ConnectivityMatrix(): walk(), drive() {}
     ConnectivityMatrix(const BaseWorld& base);
     const Matrix<CMID>& get_walk() const { return walk; }
     const Matrix<CMID>& get_drive() const { return drive; }
-    // void display_full() const;
 };
 
 using CM = ConnectivityMatrix;

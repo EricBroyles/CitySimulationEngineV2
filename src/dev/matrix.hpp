@@ -44,7 +44,7 @@ private:
         std::vector<Speed> speed_data(mph.cols * mph.rows);
         PackedByteArray bytes = mph.get_bytes();
         for (int i = 0; i < bytes.size(); i++) {
-            speed_data[i] = Speed(bytes[i], sec_per_step, feet_per_cell);}
+            speed_data[i] = Speed(static_cast<MPH>(bytes[i]), sec_per_step, feet_per_cell);}
         data = speed_data;
     }
 
@@ -52,13 +52,13 @@ public:
     std::vector<T> data;
     int cols, rows;
 
-    constexpr Matrix(): 
+    Matrix(): 
         Matrix(0,0) {}
 
-    constexpr Matrix(int c, int r): 
-        cols(c), rows(r), data(c*r) {} //data filled with T()
+    Matrix(int c, int r, const T& default_val = T()): 
+        cols(c), rows(r), data(c*r, default_val) {} 
 
-    constexpr Matrix(int c, int r, std::vector<T> flat_matrix): 
+    Matrix(int c, int r, std::vector<T> flat_matrix): 
         cols(c), rows(r), data(flat_matrix) {}
 
     Matrix(const ImageMatrix<TT>& tt): 

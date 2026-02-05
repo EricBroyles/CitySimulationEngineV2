@@ -26,29 +26,14 @@ tester.matrix_tests()
 */
 #pragma once
 #include <godot_cpp/classes/ref_counted.hpp>
-#include "dev\cell.hpp"
-#include "dev\direction.hpp"
 
 using namespace godot;
 
 class Tester : public RefCounted {
     GDCLASS(Tester, RefCounted);
-private:
-    static constexpr Cell CELL5_5 = Cell(5,5); 
-    static constexpr SoloDirection SD = SoloDirection(Direction::E);
 protected:
     static void _bind_methods(); 
 public:
     Tester() {};
-    // void cell_vec_tests() const;
-    // void direction_tests() const;
-    // void speed_tests() const;
-    // void terrain_type_tests() const;
-    // void terrain_mod_tests() const;
-    // void matrix_tests() const;
-    // void image_matrix_tests() const;
-    // void world_tests() const;
-    // void cmid_tests() const;
-    // void cm_tests() const;
-    void timing() const;
+    void construct_cm() const;
 };

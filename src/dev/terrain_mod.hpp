@@ -16,6 +16,7 @@ public:
     constexpr explicit TerrainMod(uint8_t v): val(v) { validate(); } //explicit refers to static_cast<TM>
     constexpr bool operator==(const TerrainMod tm) const { return val == tm.val; }
     constexpr bool operator!=(const TerrainMod tm) const { return val != tm.val; }
+    constexpr explicit operator uint8_t() const { return val; } //static_cast<uint8_t>
 };
 
 using TM = TerrainMod;

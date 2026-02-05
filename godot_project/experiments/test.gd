@@ -12,5 +12,6 @@ func _ready() -> void:
 	#tester.world_tests()
 	#tester.cmid_tests()
 	#tester.cm_tests()
-	tester.timing()
+	#tester.timing()
+	tester.construct_cm()
 	

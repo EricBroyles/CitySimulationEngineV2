@@ -1,54 +1,261 @@
-#include "tester.h"
-#include "dev\cell.hpp"
-#include "dev\vec.hpp"
-#include "dev\direction.hpp"
-#include "dev\speed.hpp"
-#include "tests/my_input_package.hpp"
-#include "dev\terrain_type.hpp"
-#include "dev\terrain_mod.hpp"
-#include "dev\matrix.hpp"
-#include "dev\image_matrix.hpp"
-#include "dev\base_world.hpp"
-#include "dev\world.hpp"
-#include "dev\cmid.hpp"
+#include "tester.hpp"
 #include "tests/my_connectivity_matrix.hpp"
-#include <godot_cpp/classes/image_texture.hpp>
-#include "tests/my_timing_experiments.hpp"
 
 using namespace godot;
 
 void Tester::_bind_methods() {
-// 	ClassDB::bind_method(D_METHOD("cell_vec_tests"), &Tester::cell_vec_tests);
-// 	ClassDB::bind_method(D_METHOD("direction_tests"), &Tester::direction_tests);
-// 	ClassDB::bind_method(D_METHOD("speed_tests"), &Tester::speed_tests);
-// 	ClassDB::bind_method(D_METHOD("terrain_type_tests"), &Tester::terrain_type_tests);
-//     ClassDB::bind_method(D_METHOD("terrain_mod_tests"), &Tester::terrain_mod_tests);
-//     ClassDB::bind_method(D_METHOD("matrix_tests"), &Tester::matrix_tests);
-//     ClassDB::bind_method(D_METHOD("image_matrix_tests"), &Tester::image_matrix_tests);
-//     ClassDB::bind_method(D_METHOD("world_tests"), &Tester::world_tests);
-//     ClassDB::bind_method(D_METHOD("cmid_tests"), &Tester::cmid_tests);
-//     ClassDB::bind_method(D_METHOD("cm_tests"), &Tester::cm_tests);
-    ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
-
+    ClassDB::bind_method(D_METHOD("construct_cm"), &Tester::construct_cm);
 }
 
-void Tester::timing() const {
-    // print_line("hi");
-    // Ref<Image> tt_img = MyInputPackage::create_image_r8(4096, 4096, TT().val);
-    // ImageMatrix<MPH> mat = ImageMatrix<MPH>();
-    // Ref<InputPackage> input = memnew(InputPackage);
-    // InputPackage input = memnew(InputPackage(); //somthing about this is hanging?>
-    // InputPackage input = MyInputPackage::emulate(4096, 4096, TT(), TM(), Dir(), MPH());
-    // print_line(input.get_cols());
-    // print_line(input.get_rows());
-    // BaseWorld base = BaseWorld(input);
-    // print_line(base.cols);
-    // print_line(base.rows);
+void Tester::construct_cm() const {
+    print_line("==================================");
+    print_line("@TEST: construct_cm"); int passed = 0, total = 0;
 
-    // CM cm = CM();
-    CM cm = MyConnectivityMatrix::create_from_one_tt_one_dir(4096,4096,TT(TT::PARKING), Dir(Dir::ALL));
-    // MyConnectivityMatrix::display(cm);
+    /*
+    TT VARIES while Dir is ALL
+    */
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::NONE), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::NONE, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::ROAD), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_FULL_4x4) && MyCM::validate_num_groups(cm, 0, 1);
+        print_line(vformat("[Pass: %s] TT::ROAD, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::WALKWAY), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_FULL_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 1, 0);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::CROSSWALK), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_FULL_4x4, MyCM::CMID_FULL_4x4) && MyCM::validate_num_groups(cm, 1, 1);
+        print_line(vformat("[Pass: %s] TT::CROSSWALK, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_FULL_4x4, MyCM::CMID_FULL_4x4) && MyCM::validate_num_groups(cm, 1, 1);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::BUILDING), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_FULL_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 1, 0);
+        print_line(vformat("[Pass: %s] TT::BUILDING, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::BARRIER), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::BARRIER, Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    /*
+    TT VARIES while Dir is NONE
+    */
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::NONE), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::NONE, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::ROAD), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::ROAD, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::WALKWAY), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::CROSSWALK), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::CROSSWALK, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::BUILDING), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::BUILDING, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::BARRIER), Dir(Dir::NONE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_BARRIER_4x4, MyCM::CMID_BARRIER_4x4) && MyCM::validate_num_groups(cm, 0, 0);
+        print_line(vformat("[Pass: %s] TT::BARRIER, Dir::NONE", pass)); if (pass) passed++; total++;
+    }
+
+    /*
+    TT PARKING while Dir VARIES from E->SE
+    */
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::E));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_HORI_4x4, MyCM::CMID_HORI_4x4) && MyCM::validate_num_groups(cm, 4, 4);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::E", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::W));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_HORI_4x4, MyCM::CMID_HORI_4x4) && MyCM::validate_num_groups(cm, 4, 4);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::W", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::N));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_VERT_4x4, MyCM::CMID_VERT_4x4) && MyCM::validate_num_groups(cm, 4, 4);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::N", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::S));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_VERT_4x4, MyCM::CMID_VERT_4x4) && MyCM::validate_num_groups(cm, 4, 4);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::S", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::NE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_POS_DIAG_4x4, MyCM::CMID_POS_DIAG_4x4) && MyCM::validate_num_groups(cm, 7, 7);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::NE", pass)); if (pass) passed++; total++;
+    }
+
+        {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::SW));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_POS_DIAG_4x4, MyCM::CMID_POS_DIAG_4x4) && MyCM::validate_num_groups(cm, 7, 7);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::SW", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::NW));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_NEG_DIAG_4x4, MyCM::CMID_NEG_DIAG_4x4) && MyCM::validate_num_groups(cm, 7, 7);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::NW", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::PARKING), Dir(Dir::SE));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::CMID_NEG_DIAG_4x4, MyCM::CMID_NEG_DIAG_4x4) && MyCM::validate_num_groups(cm, 7, 7);
+        print_line(vformat("[Pass: %s] TT::PARKING, Dir::SE", pass)); if (pass) passed++; total++;
+    }
+
+    /*
+    W Connection
+    */
+
+    {
+        CM cm = MyCM::create_w_connection(Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::W_CONNECTION, MyCM::W_CONNECTION) && MyCM::validate_num_groups(cm, 1, 1);
+        print_line(vformat("[Pass: %s] W Connection with Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+
+    /*
+    Bottom Leak
+    */
+
+    {
+        CM cm = MyCM::create_bottom_leak(Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = MyCM::validate_matrices(cm, MyCM::BOTTOM_LEAK, MyCM::BOTTOM_LEAK) && MyCM::validate_num_groups(cm, 2, 2);
+        print_line(vformat("[Pass: %s] Bottom Leak with Dir::ALL", pass)); if (pass) passed++; total++;
+    }
+ 
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #include "dev\cell.hpp"
+// #include "dev\vec.hpp"
+// #include "dev\direction.hpp"
+// #include "dev\speed.hpp"
+// #include "tests/my_input_package.hpp"
+// #include "dev\terrain_type.hpp"
+// #include "dev\terrain_mod.hpp"
+// #include "dev\matrix.hpp"
+// #include "dev\image_matrix.hpp"
+// #include "dev\base_world.hpp"
+// #include "dev\world.hpp"
+// #include "dev\cmid.hpp"
+// #include "tests/my_connectivity_matrix.hpp"
+// #include <godot_cpp/classes/image_texture.hpp>
+// #include "tests/my_timing_experiments.hpp"
+
+
+
+// void Tester::timing() const {
+//     // print_line("hi");
+//     // Ref<Image> tt_img = MyInputPackage::create_image_r8(4096, 4096, TT().val);
+//     // ImageMatrix<MPH> mat = ImageMatrix<MPH>();
+//     // Ref<InputPackage> input = memnew(InputPackage);
+//     // InputPackage input = memnew(InputPackage(); //somthing about this is hanging?>
+//     // InputPackage input = MyInputPackage::emulate(4096, 4096, TT(), TM(), Dir(), MPH());
+//     // print_line(input.get_cols());
+//     // print_line(input.get_rows());
+//     // BaseWorld base = BaseWorld(input);
+//     // print_line(base.cols);
+//     // print_line(base.rows);
+
+//     // CM cm = CM();
+//     CM cm = MyConnectivityMatrix::create_from_one_tt_one_dir(4096,4096,TT(TT::PARKING), Dir(Dir::ALL));
+//     // MyConnectivityMatrix::display(cm);
+// }
 
 // void Tester::timing() const {
 //     {

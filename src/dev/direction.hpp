@@ -38,6 +38,7 @@ struct Direction {
     bool operator!=(const Direction rhs) const { return val != rhs.val; } // if any 1&0 do not match
     bool no_matches(const Direction dir) const { return (val & dir.val) == NONE; } // if all 1 do not match or no 1 
     bool atleast1_matches(const Direction dir) const { return !no_matches(dir); }   // if atleast one 1 matches 
+    constexpr explicit operator uint8_t() const { return val; } //static_cast<uint8_t>
 };
 
 struct SoloDirection: Direction {

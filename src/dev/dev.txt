@@ -1,3 +1,10 @@
+Cars should have 1 step per second. (70 mph max -> 10 cells/sec, so for each step I want the car to travel approx 10 cells)
+Humans should have 1 step per 5 seconds (3 mph max -> .44 cells/sec, so 2.2 cells)
+OR: have a speed differential, run extra steps proportional to speed of the agent. 
+
+
+
+
 Godot:
 
 var input: InputPackage = InputPackage.new()

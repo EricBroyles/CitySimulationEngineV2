@@ -21,6 +21,7 @@ public:
     constexpr bool can_drive() const { return CAN_DRIVE[val]; }
     constexpr bool operator==(const TerrainType tt) const { return val == tt.val; }
     constexpr bool operator!=(const TerrainType tt) const { return val != tt.val; }
+    constexpr explicit operator uint8_t() const { return val; } //static_cast<uint8_t>
 };
 
 using TT = TerrainType;

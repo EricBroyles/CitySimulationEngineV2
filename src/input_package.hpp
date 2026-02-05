@@ -1,17 +1,11 @@
-/*
-must use
-Ref<InputPackage> input = memnew(InputPackage);
-
-*/
-
 #pragma once
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/image.hpp>
-#include "dev/image_matrix.hpp"
 #include "dev/terrain_type.hpp"
 #include "dev/terrain_mod.hpp"
 #include "dev/direction.hpp"
 #include "dev/speed.hpp"
+#include "dev/image_matrix.hpp"
 
 using namespace godot;
 

@@ -4,10 +4,10 @@
 #include <stdexcept>
 #include <godot_cpp/classes/image.hpp>
 #include "cell.hpp"
-#include "speed.hpp"
 #include "terrain_type.hpp"
 #include "terrain_mod.hpp"
 #include "direction.hpp"
+#include "speed.hpp"
 #include "image_matrix.hpp"
 
 using namespace godot;

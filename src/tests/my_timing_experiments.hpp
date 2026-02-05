@@ -1,29 +1,29 @@
-// /*
-// Experiment 1: 
-// * Given: read-only user defined Speed data in the form ImageR8(4096x4096).
-// * Find:  technique with the fastest LOAD and data READ times.
-// * LOAD Time: time to complete any neccisary operations before starting to READ the data.
-// * READ Time: time to get a Speed object from the matrix and compare the Speed to Speed(0) and iterate a counter.
-// E1 Tech1: 
-// * LOAD: store references to the given image.
-// * READ: each px -> uint8_t -> Speed(uint8_t, val, val) -> Speed == Speed(0) -> iterate
-// - LOAD Time = 0 ms
-// - READ1 Time = 260.61 ms (one liner const)
-// - READ2 Time = 260.71 ms (multiple const variables)
-// - READ3 Time = 252.63 ms (multiple variables)
-// E1 Tech2: (BEST)
-// * LOAD: convert the given image into a Matrix<Speed> by copying it
-// * READ: each idx in data -> Speed == Speed(0) -> iterate
-// - LOAD Time = 78.01 ms
-// - READ1 Time = 18.01 ms (no cell just x,y)
-// - READ2 Time = 18.65 ms (used cell to access)
-// E1 Tech3: use a pointer to the raw image data, then access by getting byte -> cast to Speed. Skip.
+/*
+Experiment 1: 
+* Given: read-only user defined Speed data in the form ImageR8(4096x4096).
+* Find:  technique with the fastest LOAD and data READ times.
+* LOAD Time: time to complete any neccisary operations before starting to READ the data.
+* READ Time: time to get a Speed object from the matrix and compare the Speed to Speed(0) and iterate a counter.
+E1 Tech1: 
+* LOAD: store references to the given image.
+* READ: each px -> uint8_t -> Speed(uint8_t, val, val) -> Speed == Speed(0) -> iterate
+- LOAD Time = 0 ms
+- READ1 Time = 260.61 ms (one liner const)
+- READ2 Time = 260.71 ms (multiple const variables)
+- READ3 Time = 252.63 ms (multiple variables)
+E1 Tech2: (BEST)
+* LOAD: convert the given image into a Matrix<Speed> by copying it
+* READ: each idx in data -> Speed == Speed(0) -> iterate
+- LOAD Time = 78.01 ms
+- READ1 Time = 18.01 ms (no cell just x,y)
+- READ2 Time = 18.65 ms (used cell to access)
+E1 Tech3: use a pointer to the raw image data, then access by getting byte -> cast to Speed. Skip.
 
-// Experiment2: best way to write the data from matrix -> Imagetexture
-// * use get_data and replace the data inside an image to the data in my Matrix (Matrix -> bitstring -> put bit stirng into image -> update texture from image)
+Experiment2: best way to write the data from matrix -> Imagetexture
+* use get_data and replace the data inside an image to the data in my Matrix (Matrix -> bitstring -> put bit stirng into image -> update texture from image)
 
-
-// */
+How long does it take to create an image 4096x4096
+*/
 
 #pragma once
 #include <chrono>

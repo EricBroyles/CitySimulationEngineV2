@@ -3,8 +3,8 @@
 #include "cell.hpp"
 #include "terrain_type.hpp"
 #include "terrain_mod.hpp"
-#include "speed.hpp"
 #include "direction.hpp"
+#include "speed.hpp"
 #include "matrix.hpp"
 #include "../input_package.hpp"
 
@@ -15,11 +15,9 @@ class BaseWorld {
     const Matrix<TM> tm;
     const Matrix<Dir> dir;
     const Matrix<Speed> speed;
-    const int sec_per_step;
-    const int feet_per_cell;
     bool valid;
 public:
-    int cols, rows;
+    const int cols, rows, sec_per_step, feet_per_cell;
     BaseWorld();
     BaseWorld(const Ref<InputPackage> input);
     bool is_valid() const { return valid; }

@@ -44,4 +44,5 @@ public:
     void cmid() const;
     void construct_cm() const;
     void benchmark_cm() const;
+    void cm() const;
 };

@@ -12,9 +12,9 @@ The double loop is needed to deal with barriers creating pockets of not properly
 #pragma once
 #include <array>
 #include "cell.hpp"
-#include "matrix.hpp"
 #include "direction.hpp"
 #include "cmid.hpp"
+#include "matrix.hpp"
 #include "base_world.hpp"
 
 using namespace godot;
@@ -42,6 +42,8 @@ public:
     ConnectivityMatrix(const BaseWorld& base);
     const Matrix<CMID>& get_walk() const { return walk; }
     const Matrix<CMID>& get_drive() const { return drive; }
+    const bool can_walk_between(const Cell cell1, const Cell cell2) const { return walk.at(cell1).is_cmid() && (walk.at(cell1) == walk.at(cell2)); }
+    const bool can_drive_between(const Cell cell1, const Cell cell2) const { return drive.at(cell1).is_cmid() && (drive.at(cell1) == drive.at(cell2)); }
 };
 
 using CM = ConnectivityMatrix;

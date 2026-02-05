@@ -5,9 +5,8 @@
 
 using namespace godot;
 
-class World: public BaseWorld {
+struct World: public BaseWorld {
     ConnectivityMatrix cm;
-public:
     World() {};
     World(const Ref<InputPackage> input);
 };

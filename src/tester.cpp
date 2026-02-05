@@ -14,6 +14,29 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("cmid"), &Tester::cmid);
     ClassDB::bind_method(D_METHOD("construct_cm"), &Tester::construct_cm);
     ClassDB::bind_method(D_METHOD("benchmark_cm"), &Tester::benchmark_cm);
+    ClassDB::bind_method(D_METHOD("cm"), &Tester::cm);
+
+}
+
+void Tester::cm() const {
+    print_line("==================================");
+    print_line("@Test: cm"); int passed = 0, total = 0;
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::WALKWAY), Dir(Dir::ALL));
+        // MyCM::display(cm);
+        bool pass = cm.can_walk_between(Cell(0,0), Cell(3,3));
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, can_walk_between(Cell(0,0), Cell(3,3))", pass)); if (pass) passed++; total++;
+        pass = cm.can_walk_between(Cell(3,2), Cell(3,2));
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, can_walk_between(Cell(3,2), Cell(3,2))", pass)); if (pass) passed++; total++;
+        pass = !cm.can_drive_between(Cell(0,0), Cell(3,3));
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, not can_drive_between(Cell(0,0), Cell(3,3))", pass)); if (pass) passed++; total++;
+        pass = !cm.can_drive_between(Cell(3,2), Cell(3,2));
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, not can_drive_between(Cell(3,2), Cell(3,2))", pass)); if (pass) passed++; total++;
+    }
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::benchmark_cm() const {

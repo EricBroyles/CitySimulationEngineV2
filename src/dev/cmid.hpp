@@ -9,6 +9,7 @@ struct CMID {
     bool is_valid() const { return val > INVALID; }
     bool is_invalid() const { return !is_valid(); }
     bool is_barrier() const { return val == BARRIER; }
+    bool is_cmid() const { return val >= 0; }
     void invalidate() { val = INVALID; }
     void barrier() { val = BARRIER; }
     CMID& operator++() { ++val; return *this; } //++CMID only. 

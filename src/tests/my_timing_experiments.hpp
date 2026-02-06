@@ -51,7 +51,16 @@ struct MyTimingExperiments {
         print_line(vformat("%s %.2f ms", msg, duration_ms(start, now())));
     }
 
-    static void creating_matrix_speed_from_image() {
+    static void image_is_null() {
+        {
+            auto start = now();
+            const Ref<Image> img = Image::create(4096, 4096, false, Image::FORMAT_R8);
+            bool is_img_null = img.is_null();
+            display_duration(vformat("Time to check if emtpy matrix is null, is_null = %s", is_img_null), start);
+        }
+    }
+
+    static void create_matrix_speed_from_image() {
         int cols = 4096;
         int rows = 4096;
         const Ref<Image> mph_img = Image::create(cols, rows, false, Image::FORMAT_R8);

@@ -24,9 +24,10 @@ void Tester::timing() const {
     print_line("==================================");
     print_line("@Timing");
 
-    MyTimingExperiments::creating_matrix_speed_from_image();
+    MyTimingExperiments::create_matrix_speed_from_image();
+    MyTimingExperiments::image_is_null();
 
-    print_line("==================================");
+    print_line("==================================\n");
 
 }
 
@@ -75,7 +76,7 @@ void Tester::benchmark_cm() const {
         CM cm = MyCM::create(4096, 4096, TT(TT::PARKING), Dir(Dir::ALL), display_time);
     }
 
-    print_line("==================================");
+    print_line("==================================\n");
 }
 
 void Tester::construct_cm() const {

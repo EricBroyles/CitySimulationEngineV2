@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_set> 
-#include <stdexcept>
+// #include <stdexcept>
 #include <godot_cpp/classes/image.hpp>
 #include "cell.hpp"
 #include "terrain_type.hpp"
@@ -14,40 +14,82 @@ using namespace godot;
 
 template <typename T> struct Matrix {
 private:
-    void set_tt_from_image_matrix(const ImageMatrix<TT>& tt) {
-        //must be r8
-        std::vector<TT> tt_data(tt.cols * tt.rows);
-        PackedByteArray bytes = tt.get_bytes();
-        for (int i = 0; i < bytes.size(); i++) {
-            tt_data[i] = static_cast<TT>(bytes[i]);}
-        data = tt_data;
+    void set_data_from_copy(const ImageMatrix<TT>& mat) {
+        std::vector<TT> new_data(mat.cols * mat.rows);
+        const PackedByteArray bytes = mat.copy_bytes();
+        const int num_bytes = bytes.size();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<TT>(bytes[i]);}
+        data = new_data;
     }
 
-    void set_tm_from_image_matrix(const ImageMatrix<TM>& tm) {
-        //must be r8
-        std::vector<TM> tm_data(tm.cols * tm.rows);
-        PackedByteArray bytes = tm.get_bytes();
-        for (int i = 0; i < bytes.size(); i++) {
-            tm_data[i] = static_cast<TM>(bytes[i]);}
-        data = tm_data;
+    void set_data_from_copy(const ImageMatrix<TM>& mat) {
+        std::vector<TM> new_data(mat.cols * mat.rows);
+        const PackedByteArray bytes = mat.copy_bytes();
+        const int num_bytes = bytes.size();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<TM>(bytes[i]);}
+        data = new_data;
     }
 
-    void set_dir_from_image_matrix(const ImageMatrix<Dir>& dir) {
-        //must be r8
-        std::vector<Dir> dir_data(dir.cols * dir.rows);
-        PackedByteArray bytes = dir.get_bytes();
-        for (int i = 0; i < bytes.size(); i++) {
-            dir_data[i] = static_cast<Dir>(bytes[i]);}
-        data = dir_data;
+    void set_data_from_copy(const ImageMatrix<Dir>& mat) {
+        std::vector<Dir> new_data(mat.cols * mat.rows);
+        const PackedByteArray bytes = mat.copy_bytes();
+        const int num_bytes = bytes.size();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<Dir>(bytes[i]);}
+        data = new_data;
     }
 
-    void set_speed_from_image_matrix(const ImageMatrix<MPH>& mph, int sec_per_step, int feet_per_cell) {
-        //must be r8
-        std::vector<Speed> speed_data(mph.cols * mph.rows);
-        PackedByteArray bytes = mph.get_bytes();
-        for (int i = 0; i < bytes.size(); i++) {
-            speed_data[i] = Speed(static_cast<MPH>(bytes[i]), sec_per_step, feet_per_cell);}
-        data = speed_data;
+    void set_data_from_copy(const ImageMatrix<MPH>& mat, int sec_per_step, int feet_per_cell) {
+        std::vector<Speed> new_data(mat.cols * mat.rows);
+        const PackedByteArray bytes = mat.copy_bytes();
+        const int num_bytes = bytes.size();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = Speed(static_cast<MPH>(bytes[i]), sec_per_step, feet_per_cell);}
+        data = new_data;
+    }
+
+    /*~300 ms faster than from_copy*/
+    
+    void set_data(const ImageMatrix<TT>& mat) {
+        std::vector<TT> new_data(mat.cols * mat.rows);
+        const uint8_t* bytes = mat.bytes_ptr();
+        const int num_bytes = mat.num_bytes();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<TT>(bytes[i]);
+        }
+        data = new_data;
+    }
+
+    void set_data(const ImageMatrix<TM>& mat) {
+        std::vector<TM> new_data(mat.cols * mat.rows);
+        const uint8_t* bytes = mat.bytes_ptr();
+        const int num_bytes = mat.num_bytes();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<TM>(bytes[i]);
+        }
+        data = new_data;
+    }
+
+    void set_data(const ImageMatrix<Dir>& mat) {
+        std::vector<Dir> new_data(mat.cols * mat.rows);
+        const uint8_t* bytes = mat.bytes_ptr();
+        const int num_bytes = mat.num_bytes();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = static_cast<Dir>(bytes[i]);
+        }
+        data = new_data;
+    }
+
+    void set_data(const ImageMatrix<MPH>& mat, int sec_per_step, int feet_per_cell) {
+        std::vector<Speed> new_data(mat.cols * mat.rows);
+        const uint8_t* bytes = mat.bytes_ptr();
+        const int num_bytes = mat.num_bytes();
+        for (int i = 0; i < num_bytes; i++) {
+            new_data[i] = Speed(static_cast<MPH>(bytes[i]), sec_per_step, feet_per_cell);
+        }
+        data = new_data;
     }
 
 public:
@@ -66,25 +108,25 @@ public:
     Matrix(const ImageMatrix<TT>& tt): 
         cols(tt.cols), rows(tt.rows), 
         data(tt.cols * tt.rows) {
-        set_tt_from_image_matrix(tt);
+        set_data(tt);
     }
 
     Matrix(const ImageMatrix<TM>& tm): 
         cols(tm.cols), rows(tm.rows), 
         data(tm.cols * tm.rows) {
-        set_tm_from_image_matrix(tm);
+        set_data(tm);
     }
 
     Matrix(const ImageMatrix<Dir>& dir): 
         cols(dir.cols), rows(dir.rows), 
         data(dir.cols * dir.rows) {
-        set_dir_from_image_matrix(dir);
+        set_data(dir);
     }
     
     Matrix(const ImageMatrix<MPH>& mph, int sec_per_step, int feet_per_cell): 
         cols(mph.cols), rows(mph.rows), 
         data(mph.cols * mph.rows) {
-        set_speed_from_image_matrix(mph, sec_per_step, feet_per_cell);
+        set_data(mph, sec_per_step, feet_per_cell);
     } 
         
     T& at(int c, int r) { 

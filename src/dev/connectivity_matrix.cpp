@@ -75,10 +75,11 @@ void CM::set_upstream_cmids(const BaseWorld& base) {
 }
 
 void CM::resolve_cell(const BaseWorld& base, Matrix<CMID>& matrix, const Cell cell, const SDirArr4& cell_sdirs, const SDirArr4& adj_sdirs) {
-    std::array<bool, cell_sdirs.size()> connected = {}; //all false
+    static constexpr int NUM = std::size(cell_sdirs);
+    std::array<bool, NUM> connected = {}; //all false
     CMID& smallest = matrix.at(cell); //reference to avoid extra matrix.at(cell) = smallest
     if (smallest.is_barrier()) { return; }
-    for (int i = 0; i < cell_sdirs.size(); i++) {
+    for (int i = 0; i < NUM; i++) {
         const Cell adj_cell = cell.get_adjacent_cell(cell_sdirs[i]); //use cell_sdirs to search for the adjacent cell
         if (base.out_of_bounds(adj_cell)) { continue; }
         const CMID adj_cmid = matrix.at(adj_cell); //copy
@@ -89,7 +90,7 @@ void CM::resolve_cell(const BaseWorld& base, Matrix<CMID>& matrix, const Cell ce
         connected[i] = true;
         if (adj_cmid < smallest) { smallest = adj_cmid; }
     }
-    for (int i = 0; i < cell_sdirs.size(); i++) {
+    for (int i = 0; i < NUM; i++) {
         if (connected[i]) { 
             const Cell adj_cell = cell.get_adjacent_cell(cell_sdirs[i]);
             matrix.at(adj_cell) = smallest;

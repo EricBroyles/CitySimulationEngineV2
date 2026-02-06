@@ -29,10 +29,10 @@ public:
     InputPackage(): cols(0), rows(0), sec_per_step(1), feet_per_cell(10), num_steps(0), num_humans(0), personal_vehicle_ownership_rate(0)  {}
 
     void set_image_matrices(const Ref<Image> p_tt, const Ref<Image> p_tm, const Ref<Image> p_dir, const Ref<Image> p_mph) {
-        tt = ImageMatrix<TT>(p_tt);
-        tm = ImageMatrix<TM>(p_tm);
-        dir = ImageMatrix<Dir>(p_dir);
-        mph = ImageMatrix<MPH>(p_mph);
+        tt = ImageMatrix<TT>(p_tt, TT::IMAGE_FORMAT);
+        tm = ImageMatrix<TM>(p_tm, TM::IMAGE_FORMAT);
+        dir = ImageMatrix<Dir>(p_dir, Dir::IMAGE_FORMAT);
+        mph = ImageMatrix<MPH>(p_mph, MPH::IMAGE_FORMAT);
         cols = tt.cols;
         rows = tt.rows;
     }

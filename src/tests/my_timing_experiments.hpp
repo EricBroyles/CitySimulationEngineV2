@@ -23,10 +23,15 @@ Experiment2: best way to write the data from matrix -> Imagetexture
 * use get_data and replace the data inside an image to the data in my Matrix (Matrix -> bitstring -> put bit stirng into image -> update texture from image)
 
 How long does it take to create an image 4096x4096
+
+
+uint8_t* data = img->ptrw();
 */
 
 #pragma once
 #include <chrono>
+#include <vector>
+#include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/variant/string.hpp>
 
 using namespace godot;
@@ -46,6 +51,44 @@ struct MyTimingExperiments {
         print_line(vformat("%s %.2f ms", msg, duration_ms(start, now())));
     }
 
+    static void creating_matrix_speed_from_image() {
+        int cols = 4096;
+        int rows = 4096;
+        const Ref<Image> mph_img = Image::create(cols, rows, false, Image::FORMAT_R8);
+        mph_img->fill(Color(1/255.0f, 0, 0, 1));
+
+        {
+            auto start = now();
+            std::vector<Speed> speed_data(cols * rows);
+            PackedByteArray bytes = mph_img->get_data(); //copy
+            for (int i = 0; i < bytes.size(); i++) {
+                speed_data[i] = Speed(static_cast<MPH>(bytes[i]), 1, 1);}
+            Matrix<Speed> speed(cols,rows,speed_data);
+            display_duration("Time to create Matrix<Speed> by copy bytes (get_data)", start);
+        }
+
+        {
+            auto start = now();
+            std::vector<Speed> speed_data(cols * rows);
+            const uint8_t* data = mph_img->ptr();  // Read-only pointer (since mph_img is const)
+            for (int i = 0; i < cols * rows; i++) {
+                speed_data[i] = Speed(static_cast<MPH>(data[i]), 1, 1);
+            }
+            Matrix<Speed> speed(cols, rows, speed_data);
+            display_duration("Time to create Matrix<Speed> by pointer (ptr())", start);
+        }
+
+        {
+            auto start = now();
+            std::vector<Speed> speed_data(cols * rows);
+            const uint8_t* data = mph_img->ptr();  // Read-only pointer (since mph_img is const)
+            for (int i = 0; i < cols * rows; i++) {
+                speed_data[i] = Speed(static_cast<MPH>(data[i]), 1, 1);
+            }
+            Matrix<Speed> speed(cols, rows, std::move(speed_data));
+            display_duration("Time to create Matrix<Speed> by pointer with std::move (ptr())", start);
+        }
+    }
 };
 
 

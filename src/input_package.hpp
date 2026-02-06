@@ -28,7 +28,7 @@ protected:
 public:
     InputPackage(): cols(0), rows(0), sec_per_step(1), feet_per_cell(10), num_steps(0), num_humans(0), personal_vehicle_ownership_rate(0)  {}
 
-    void set_image_matrices(Ref<Image> p_tt, Ref<Image> p_tm, Ref<Image> p_dir, Ref<Image> p_mph) {
+    void set_image_matrices(const Ref<Image> p_tt, const Ref<Image> p_tm, const Ref<Image> p_dir, const Ref<Image> p_mph) {
         tt = ImageMatrix<TT>(p_tt);
         tm = ImageMatrix<TM>(p_tm);
         dir = ImageMatrix<Dir>(p_dir);

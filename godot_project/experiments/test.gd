@@ -11,5 +11,6 @@ func _ready() -> void:
 	#tester.cmid()
 	#tester.construct_cm()
 	#tester.benchmark_cm()
-	tester.cm()
+	#tester.cm()
+	tester.timing()
 	

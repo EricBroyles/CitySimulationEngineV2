@@ -15,6 +15,7 @@ using namespace godot;
 template <typename T> struct Matrix {
 private:
     void set_tt_from_image_matrix(const ImageMatrix<TT>& tt) {
+        //must be r8
         std::vector<TT> tt_data(tt.cols * tt.rows);
         PackedByteArray bytes = tt.get_bytes();
         for (int i = 0; i < bytes.size(); i++) {
@@ -23,6 +24,7 @@ private:
     }
 
     void set_tm_from_image_matrix(const ImageMatrix<TM>& tm) {
+        //must be r8
         std::vector<TM> tm_data(tm.cols * tm.rows);
         PackedByteArray bytes = tm.get_bytes();
         for (int i = 0; i < bytes.size(); i++) {
@@ -31,6 +33,7 @@ private:
     }
 
     void set_dir_from_image_matrix(const ImageMatrix<Dir>& dir) {
+        //must be r8
         std::vector<Dir> dir_data(dir.cols * dir.rows);
         PackedByteArray bytes = dir.get_bytes();
         for (int i = 0; i < bytes.size(); i++) {
@@ -39,6 +42,7 @@ private:
     }
 
     void set_speed_from_image_matrix(const ImageMatrix<MPH>& mph, int sec_per_step, int feet_per_cell) {
+        //must be r8
         std::vector<Speed> speed_data(mph.cols * mph.rows);
         PackedByteArray bytes = mph.get_bytes();
         for (int i = 0; i < bytes.size(); i++) {
@@ -56,7 +60,7 @@ public:
     Matrix(int c, int r, const T& default_val = T()): 
         cols(c), rows(r), data(c*r, default_val) {} 
 
-    Matrix(int c, int r, std::vector<T> flat_matrix): 
+    Matrix(int c, int r, const std::vector<T>& flat_matrix): 
         cols(c), rows(r), data(flat_matrix) {}
 
     Matrix(const ImageMatrix<TT>& tt): 

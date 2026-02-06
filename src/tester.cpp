@@ -1,6 +1,7 @@
 #include "tester.hpp"
 #include "dev/cmid.hpp"
 #include "tests/my_connectivity_matrix.hpp"
+#include "tests/my_timing_experiments.hpp"
 
 using namespace godot;
 
@@ -15,6 +16,17 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("construct_cm"), &Tester::construct_cm);
     ClassDB::bind_method(D_METHOD("benchmark_cm"), &Tester::benchmark_cm);
     ClassDB::bind_method(D_METHOD("cm"), &Tester::cm);
+    ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
+
+}
+
+void Tester::timing() const {
+    print_line("==================================");
+    print_line("@Timing");
+
+    MyTimingExperiments::creating_matrix_speed_from_image();
+
+    print_line("==================================");
 
 }
 

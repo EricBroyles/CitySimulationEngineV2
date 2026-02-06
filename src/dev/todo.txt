@@ -1,3 +1,9 @@
+Thursday (2/5/2026):
++ average_walk_speed -> just assume to be 3mph. world.get_average_wlak_speed
++ average_drive_speed -> calculate for each group (inside world). world.get_avg_drive_speed...
++ try to use uint8_t* data = img->ptrw(); inside matrix to create the matrixes
++ Agents: architecture design
+
 
 
 -------------------------------
@@ -7,8 +13,6 @@ Wednesday (2/4/2026):
 + check for easy performance enhancement, copying too many times. (Done)
 - Cleanup code: remove unneeded comments, remove unneeded dependencies. (Done)
 + can_walk_between and can_drive_between (Done)
-
-
 
 -------------------------------
 Tuesday (2/3/26):

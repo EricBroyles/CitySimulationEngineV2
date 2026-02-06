@@ -9,4 +9,5 @@ void InputPackage::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_num_steps", "val"), &InputPackage::set_num_steps);
 	ClassDB::bind_method(D_METHOD("set_num_humans", "val"), &InputPackage::set_num_humans);
 	ClassDB::bind_method(D_METHOD("set_personal_vehicle_ownership_rate", "val"), &InputPackage::set_personal_vehicle_ownership_rate);
-}
+	ClassDB::bind_method(D_METHOD("override_avg_mph", "walk_mph", "drive_mph"), &InputPackage::override_avg_mph);
+}    

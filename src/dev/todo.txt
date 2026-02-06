@@ -1,11 +1,9 @@
 Thursday (2/5/2026):
-+ average_walk_speed -> just assume to be 3mph. world.get_average_wlak_speed
-+ average_drive_speed -> calculate for each group (inside world). world.get_avg_drive_speed...
++ average_walk_speed -> just assume to be 3mph. world.get_average_wlak_speed (Done)
++ average_drive_speed -> (Done)
 + try to use uint8_t* data = img->ptr(); inside matrix to create the matrixes (Done)
++ check all for loops for easy const variable optimization. (Done)
 + Agents: architecture design
-+ check all for loops for easy const variable optimization.
-
-
 
 -------------------------------
 Wednesday (2/4/2026):

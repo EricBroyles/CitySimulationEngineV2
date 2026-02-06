@@ -21,11 +21,15 @@ class InputPackage: public RefCounted {
     int num_steps;
     int num_humans;
     int personal_vehicle_ownership_rate;
+    MPH avg_walk_mph = DEFAULT_AVG_WALK_MPH;
+    MPH avg_drive_mph = DEFAULT_AVG_DRIVE_MPH;
 
 protected:
     static void _bind_methods(); 
 
 public:
+    static constexpr MPH DEFAULT_AVG_WALK_MPH = MPH(3);
+    static constexpr MPH DEFAULT_AVG_DRIVE_MPH = MPH(38);
     InputPackage(): cols(0), rows(0), sec_per_step(1), feet_per_cell(10), num_steps(0), num_humans(0), personal_vehicle_ownership_rate(0)  {}
 
     void set_image_matrices(const Ref<Image> p_tt, const Ref<Image> p_tm, const Ref<Image> p_dir, const Ref<Image> p_mph) {
@@ -37,11 +41,13 @@ public:
         rows = tt.rows;
     }
 
-    void set_sec_per_step(int val)                    { sec_per_step = val; }
-    void set_feet_per_cell(int val)                   { feet_per_cell = val; }
-    void set_num_steps(int val)                       { num_steps = val; }
-    void set_num_humans(int val)                      { num_humans = val; }
+    void set_sec_per_step(int val) { sec_per_step = val; }
+    void set_feet_per_cell(int val) { feet_per_cell = val; }
+    void set_num_steps(int val) { num_steps = val; }
+    void set_num_humans(int val) { num_humans = val; }
     void set_personal_vehicle_ownership_rate(int val) { personal_vehicle_ownership_rate = val; }
+    void override_avg_mph(uint8_t walk_mph, uint8_t drive_mph) { avg_walk_mph = MPH(walk_mph); avg_drive_mph = MPH(drive_mph); } //I cannot have 
+
 
     const ImageMatrix<TT>&  get_tt()            const { return tt; }
     const ImageMatrix<TM>&  get_tm()            const { return tm; }
@@ -54,6 +60,8 @@ public:
     int get_num_steps()                         const { return num_steps; }
     int get_num_humans()                        const { return num_humans; }
     int get_personal_vehicle_ownership_rate()   const { return personal_vehicle_ownership_rate; }
+    Speed get_avg_walk_speed()                  const { return Speed(avg_walk_mph, sec_per_step, feet_per_cell); }
+    Speed get_avg_drive_speed()                 const { return Speed(avg_drive_mph, sec_per_step, feet_per_cell); }
 };
 
 

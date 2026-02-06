@@ -18,6 +18,7 @@ class BaseWorld {
     bool valid;
 public:
     const int cols, rows, sec_per_step, feet_per_cell;
+    const Speed avg_walk_speed, avg_drive_speed;
     BaseWorld();
     BaseWorld(const Ref<InputPackage> input);
     bool is_valid() const { return valid; }

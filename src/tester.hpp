@@ -46,4 +46,5 @@ public:
     void benchmark_cm() const;
     void cm() const;
     void timing() const;
+    void world() const;
 };

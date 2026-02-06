@@ -13,9 +13,10 @@ func _ready() -> void:
 	#tester.matrix()
 	#tester.cmid()
 	#tester.construct_cm()
-	tester.benchmark_cm()
+	#tester.benchmark_cm()
 	#tester.cm()
 	#tester.timing()
+	tester.world()
 	
 	var end_time = Time.get_ticks_usec()
 	var elapsed_ms = (end_time - start_time) / 1000.0

@@ -2,6 +2,7 @@
 #include "dev/cmid.hpp"
 #include "tests/my_connectivity_matrix.hpp"
 #include "tests/my_timing_experiments.hpp"
+#include "dev/world.hpp"
 
 using namespace godot;
 
@@ -17,7 +18,34 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("benchmark_cm"), &Tester::benchmark_cm);
     ClassDB::bind_method(D_METHOD("cm"), &Tester::cm);
     ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
+    ClassDB::bind_method(D_METHOD("world"), &Tester::world);
+}
 
+void Tester::world() const {
+    print_line("==================================");
+    print_line("@TEST: construct_cm"); int passed = 0, total = 0;
+
+    {
+        Ref<InputPackage> input = MyInputPackage::create(100,100,TT(),TM(),Dir(),MPH());
+        World world = World(input);
+        bool pass = world.avg_walk_speed == Speed(InputPackage::DEFAULT_AVG_WALK_MPH, world.sec_per_step, world.feet_per_cell) 
+                    && world.avg_drive_speed == Speed(InputPackage::DEFAULT_AVG_DRIVE_MPH, world.sec_per_step, world.feet_per_cell);
+        print_line(vformat("[Pass: %s] Check walk and drive average speeds", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        MPH NEW_WALK_MPH = MPH(8); 
+        MPH NEW_DRIVE_MPH = MPH(12);
+        Ref<InputPackage> input = MyInputPackage::create(100,100,TT(),TM(),Dir(),MPH());
+        input->override_avg_mph(NEW_WALK_MPH.val, NEW_DRIVE_MPH.val);
+        World world = World(input);
+        bool pass = world.avg_walk_speed == Speed(NEW_WALK_MPH, world.sec_per_step, world.feet_per_cell) 
+                    && world.avg_drive_speed == Speed(NEW_DRIVE_MPH, world.sec_per_step, world.feet_per_cell);
+        print_line(vformat("[Pass: %s] Check walk and drive average speeds with override", pass)); if (pass) passed++; total++;
+    }
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::timing() const {

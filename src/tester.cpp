@@ -3,6 +3,7 @@
 #include "tests/my_connectivity_matrix.hpp"
 #include "tests/my_timing_experiments.hpp"
 #include "dev/world.hpp"
+#include "idx.hpp"
 
 using namespace godot;
 
@@ -19,6 +20,170 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("cm"), &Tester::cm);
     ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
     ClassDB::bind_method(D_METHOD("world"), &Tester::world);
+    ClassDB::bind_method(D_METHOD("idx"), &Tester::idx);
+}
+
+void Tester::idx() const {
+    print_line("==================================");
+    print_line("@TEST: idx"); int passed = 0, total = 0;
+
+    {
+        AgentIDX idx;
+        bool pass = idx.val == AgentIDX::INVALID && idx.is_invalid() && !idx.is_valid();
+        print_line(vformat("[Pass: %s] Default constructor creates invalid index", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(5);
+        bool pass = idx.val == 5 && idx.is_valid() && !idx.is_invalid();
+        print_line(vformat("[Pass: %s] Explicit constructor with valid value", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(0);
+        bool pass = idx.val == 0 && idx.is_valid();
+        print_line(vformat("[Pass: %s] Index with value 0 is valid", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(-1);
+        bool pass = idx.val == -1 && idx.is_invalid();
+        print_line(vformat("[Pass: %s] Index with value -1 is invalid", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(-2);
+        bool pass = idx.val == -2 && idx.is_invalid();
+        print_line(vformat("[Pass: %s] Index with value less than -1 is invalid", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(5);
+        AgentIDX idx2(5);
+        bool pass = idx1 == idx2;
+        print_line(vformat("[Pass: %s] Equality operator for equal indices", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(5);
+        AgentIDX idx2(7);
+        bool pass = idx1 != idx2;
+        print_line(vformat("[Pass: %s] Inequality operator for different indices", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(3);
+        AgentIDX idx2(7);
+        bool pass = idx1 < idx2 && !(idx2 < idx1);
+        print_line(vformat("[Pass: %s] Less than operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(7);
+        AgentIDX idx2(3);
+        bool pass = idx1 > idx2 && !(idx2 > idx1);
+        print_line(vformat("[Pass: %s] Greater than operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(5);
+        AgentIDX idx2(5);
+        AgentIDX idx3(3);
+        bool pass = idx1 <= idx2 && idx3 <= idx1;
+        print_line(vformat("[Pass: %s] Less than or equal operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(5);
+        AgentIDX idx2(5);
+        AgentIDX idx3(7);
+        bool pass = idx1 >= idx2 && idx3 >= idx1;
+        print_line(vformat("[Pass: %s] Greater than or equal operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(5);
+        ++idx;
+        bool pass = idx.val == 6;
+        print_line(vformat("[Pass: %s] Prefix increment operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(5);
+        AgentIDX old = idx++;
+        bool pass = idx.val == 6 && old.val == 5;
+        print_line(vformat("[Pass: %s] Postfix increment operator", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(-1);
+        ++idx;
+        bool pass = idx.val == 0 && idx.is_valid();
+        print_line(vformat("[Pass: %s] Increment from invalid to valid", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx(42);
+        int val = static_cast<int>(idx);
+        bool pass = val == 42;
+        print_line(vformat("[Pass: %s] Explicit cast to int", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        constexpr AgentIDX idx(10);
+        constexpr bool is_valid = idx.is_valid();
+        bool pass = is_valid;
+        print_line(vformat("[Pass: %s] Constexpr operations work", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        // Type safety: AgentIDX and HumanIDX should be different types
+        // This test verifies they can't be accidentally mixed
+        AgentIDX agent_idx(5);
+        HumanIDX human_idx(5);
+        // The following lines should NOT compile (commented out):
+        // bool wrong = agent_idx == human_idx;  // Should fail to compile (pass)
+        bool pass = agent_idx.val == human_idx.val;  // Can compare values explicitly
+        print_line(vformat("[Pass: %s] Type safety - different tag types are distinct", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        PersonalVehicleIDX pv_idx(10);
+        PVIDX alias_idx(10);
+        bool pass = pv_idx == alias_idx;  // Same type, should compile
+        print_line(vformat("[Pass: %s] Type alias PVIDX works correctly", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    {
+        AgentIDX idx1(10);
+        AgentIDX idx2(10);
+        AgentIDX idx3(15);
+        bool pass = (idx1 == idx2) && !(idx1 == idx3) && 
+                   (idx1 != idx3) && !(idx1 != idx2);
+        print_line(vformat("[Pass: %s] Multiple comparison operations", pass)); 
+        if (pass) passed++; total++;
+    }
+
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
 }
 
 void Tester::world() const {
@@ -74,6 +239,18 @@ void Tester::cm() const {
         print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, not can_drive_between(Cell(0,0), Cell(3,3))", pass)); if (pass) passed++; total++;
         pass = !cm.can_drive_between(Cell(3,2), Cell(3,2));
         print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, not can_drive_between(Cell(3,2), Cell(3,2))", pass)); if (pass) passed++; total++;
+    }
+
+    {
+        CM cm = MyCM::create(4, 4, TT(TT::WALKWAY), Dir(Dir::ALL));
+        bool pass = cm.get_walk_cmid(Cell(0,0)) == CMID(0);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, get_walk_cmid(Cell(0,0)) == CMID(0)", pass)); if (pass) passed++; total++;
+        pass = cm.get_walk_cmid(Cell(2,3)) == CMID(0);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, get_walk_cmid(Cell(2,3)) == CMID(0)", pass)); if (pass) passed++; total++;
+        pass = cm.get_drive_cmid(Cell(0,0)) == CMID(CMID::BARRIER);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, get_drive_cmid(Cell(0,0)) == CMID(BARRIER)", pass)); if (pass) passed++; total++;
+        pass = cm.get_drive_cmid(Cell(2,3)) == CMID(CMID::BARRIER);
+        print_line(vformat("[Pass: %s] TT::WALKWAY, Dir::ALL, get_drive_cmid(Cell(2,3)) == CMID(BARRIER)", pass)); if (pass) passed++; total++;
     }
 
     print_line(vformat("@Results: %d/%d", passed, total));

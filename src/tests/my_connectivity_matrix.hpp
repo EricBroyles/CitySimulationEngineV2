@@ -42,13 +42,13 @@ struct MyConnectivityMatrix {
 
     static void display(const CM& cm) {
         print_line("Walk: ");
-        MyMatrix<CMID>::display_full_as_int(cm.get_walk());
+        MyMatrix<CMID>::display_full_as_int(cm.get_walk_matrix());
         print_line("Drive: ");
-        MyMatrix<CMID>::display_full_as_int(cm.get_drive());
+        MyMatrix<CMID>::display_full_as_int(cm.get_drive_matrix());
     }
 
     static bool validate_matrices(const CM& cm, const Matrix<CMID>& correct_walk, const Matrix<CMID>& correct_drive) {
-        return cm.get_walk() == correct_walk && cm.get_drive() == correct_drive;
+        return cm.get_walk_matrix() == correct_walk && cm.get_drive_matrix() == correct_drive;
     }
 
     static bool validate_num_groups(const CM& cm, int correct_num_walk_groups, int correct_num_drive_groups) {

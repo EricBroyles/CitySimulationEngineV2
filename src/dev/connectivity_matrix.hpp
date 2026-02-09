@@ -40,10 +40,12 @@ public:
     int num_drive_groups = 0;
     ConnectivityMatrix(): walk(), drive() {}
     ConnectivityMatrix(const BaseWorld& base);
-    const Matrix<CMID>& get_walk() const { return walk; }
-    const Matrix<CMID>& get_drive() const { return drive; }
-    const bool can_walk_between(const Cell cell1, const Cell cell2) const { return walk.at(cell1).is_cmid() && (walk.at(cell1) == walk.at(cell2)); }
-    const bool can_drive_between(const Cell cell1, const Cell cell2) const { return drive.at(cell1).is_cmid() && (drive.at(cell1) == drive.at(cell2)); }
+    const Matrix<CMID>& get_walk_matrix() const { return walk; }
+    const Matrix<CMID>& get_drive_matrix() const { return drive; }
+    bool can_walk_between(const Cell cell1, const Cell cell2) const { return walk.at(cell1).is_cmid() && (walk.at(cell1) == walk.at(cell2)); }
+    bool can_drive_between(const Cell cell1, const Cell cell2) const { return drive.at(cell1).is_cmid() && (drive.at(cell1) == drive.at(cell2)); }
+    CMID get_walk_cmid(const Cell cell) const { return walk.at(cell); }
+    CMID get_drive_cmid(const Cell cell) const { return drive.at(cell); }
 };
 
 using CM = ConnectivityMatrix;

@@ -4,7 +4,7 @@
 
 struct Cell {
     static constexpr int INVALID = -1;
-    int x, y;
+    int16_t x, y;
     constexpr Cell(): x(INVALID), y(INVALID) {}
     constexpr Cell(int px, int py): x(px), y(py) {}
     constexpr Cell(Vec2i v): x(v.x), y(v.y) {}

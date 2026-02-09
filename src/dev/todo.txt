@@ -1,3 +1,29 @@
+
+
+Test Needed:
+* idx.hpp
+* get cmid for walk and drive
+
+
+
+Features:
++ CM.get_cmid(Cell cell) (done)
++ ParkingManager
++ BuildingManager
++ estimate_walk_time, estime_drive_time
+
+Friday (2/6/2026):
++ Agents
++ Agent
++ Human: Agent
++ PersonalVehicle: Agent
++ Generate initial Parking spaces for Cars and Buildings for Humans.
+    -> ParkingManager object lives inside World. assign car to random parking spot. (each car gets its own starting cell). gets passed a car that it assigns stuff to.
+    -> BuildingManager object lives inside World. assign person to random building cell. (each person gets their own starting cell). gets passed a Human that it asigns stuff to.
+    -> Both work by having different resolutions and by tracking total spaces available at a lower resolution view
+    -> have them wrap store a reference to baseworld (cast world to baseworld)
+
+----------------------------
 Thursday (2/5/2026):
 + average_walk_speed -> just assume to be 3mph. world.get_average_wlak_speed (Done)
 + average_drive_speed -> (Done)

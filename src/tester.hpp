@@ -47,4 +47,5 @@ public:
     void cm() const;
     void timing() const;
     void world() const;
+    void idx() const;
 };

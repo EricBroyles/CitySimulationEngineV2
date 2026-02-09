@@ -1,3 +1,77 @@
+@Simulation Construction(InputPackage):
+World(InputPackage): 
+* estimate_walk_time(cell1, cell2) -> use simple distance
+-> CM
+-> ParkingManager
+    * reserve_random_parking_cell() -> Cell, update internal counts
+    * reserve_reasonable_parking_cell() -> Cell, update internal counts
+-> BuildingManager
+    -> get_random_building_cell() -> Cell
+    -> reserve_random_building_cell() -> Cell, updates the counts.
+Agents(InputPackage, World): 
+-> Humans
+    - [Cell]: homes | BuildingManager.reserve_random_building_cell()
+    - [Cell]: destinations | BuildingManager.get_random_building_cell()
+    - [Cell]: positions | construct from homes
+    - [NavSeq]: navseqs | pick a sequence given a start and end cell and the world. seq_score for all navseq options. Can I walk. Walk Estimeated Time
+
+-> PersonalVehicles
+
+
+
+@Step 1
+
+
+
+
+
+
+//     const World& world;
+//     Cell position;
+//     Cell home;
+//     Cell destination;
+//     Path path;
+//     Navseq navseq;
+//     PersonalVehicle& pv;
+
+// actions
+// -> enter personal vehicle, 
+// -> leave personal vehicle
+// set personal vehicle (or do this inside agetns)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Agents
+-> Humans
+    * are they in a car/out of car, navseq
+   * Human.enter(PersonalVehicle)
+   * Human.leave(PersonalVehicle)
+-> PersonalVehicles
+
+
+
+
 Cars should have 1 step per second. (70 mph max -> 10 cells/sec, so for each step I want the car to travel approx 10 cells)
 Humans should have 1 step per 5 seconds (3 mph max -> .44 cells/sec, so 2.2 cells)
 OR: have a speed differential, run extra steps proportional to speed of the agent. 

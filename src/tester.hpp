@@ -48,4 +48,5 @@ public:
     void timing() const;
     void world() const;
     void idx() const;
+    void occupancy_tree() const;
 };

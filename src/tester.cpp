@@ -4,6 +4,7 @@
 #include "tests/my_timing_experiments.hpp"
 #include "dev/world.hpp"
 #include "idx.hpp"
+#include "tests/my_occupancy_tree.hpp"
 
 using namespace godot;
 
@@ -21,6 +22,20 @@ void Tester::_bind_methods() {
     ClassDB::bind_method(D_METHOD("timing"), &Tester::timing);
     ClassDB::bind_method(D_METHOD("world"), &Tester::world);
     ClassDB::bind_method(D_METHOD("idx"), &Tester::idx);
+    ClassDB::bind_method(D_METHOD("occupancy_tree"), &Tester::occupancy_tree);
+
+}
+
+void Tester::occupancy_tree() const {
+    print_line("==================================");
+    print_line("@TEST: occupancy_tree"); int passed = 0, total = 0;
+    {
+        OccupancyTree tree = MyOccupancyTree::create(8,8,TT(TT::PARKING));
+        MyOccupancyTree::print(tree);
+    }
+    print_line(vformat("@Results: %d/%d", passed, total));
+    print_line("==================================\n");
+
 }
 
 void Tester::idx() const {

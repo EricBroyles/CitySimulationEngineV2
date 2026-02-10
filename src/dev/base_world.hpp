@@ -15,14 +15,11 @@ class BaseWorld {
     const Matrix<TM> tm;
     const Matrix<Dir> dir;
     const Matrix<Speed> speed;
-    bool valid;
 public:
     const int cols, rows, sec_per_step, feet_per_cell;
     const Speed avg_walk_speed, avg_drive_speed;
     BaseWorld();
     BaseWorld(const Ref<InputPackage> input);
-    bool is_valid() const { return valid; }
-    bool is_invalid() const { return !is_valid(); }
     bool in_bounds(const Cell cell) const { return cell.in_bounds(0,0,cols-1,rows-1); }
     bool out_of_bounds(const Cell cell) const { return !in_bounds(cell); }
     const TerrainType get_tt(const Cell cell) const { return tt.at(cell); }

@@ -17,7 +17,8 @@ func _ready() -> void:
 	#tester.cm()
 	#tester.timing()
 	#tester.world()
-	tester.idx()
+	#tester.idx()
+	tester.occupancy_tree()
 	
 	var end_time = Time.get_ticks_usec()
 	var elapsed_ms = (end_time - start_time) / 1000.0

@@ -3,10 +3,9 @@
 
 using namespace godot;
 
-BaseWorld::BaseWorld(): valid(false), cols(0), rows(0), sec_per_step(0), feet_per_cell(0) {}
+BaseWorld::BaseWorld(): cols(0), rows(0), sec_per_step(0), feet_per_cell(0) {}
 
 BaseWorld::BaseWorld(const Ref<InputPackage> input):
-    valid(true),
     cols(input->get_cols()), 
     rows(input->get_rows()),
     sec_per_step(input->get_sec_per_step()), 

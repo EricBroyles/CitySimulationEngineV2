@@ -1,5 +1,4 @@
 #pragma once
-// #include <stdexcept>
 #include <array>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -15,7 +14,6 @@ private:
     constexpr void validate() const {
         if (val < NONE || val >= MAX) { 
             UtilityFunctions::push_error(vformat("Unknown TerrainType %d", val));
-            // throw std::invalid_argument("Unknown TerrainType"); // crashes godot
         }
     }
 public:

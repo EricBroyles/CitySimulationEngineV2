@@ -16,7 +16,7 @@ template <typename T> struct ImageMatrix {
 
     explicit ImageMatrix(const Ref<Image> img, const Image::Format assert_img_format): cols(img->get_width()), rows(img->get_height()), image(img) {
         if (img->get_format() != assert_img_format) {
-            throw std::invalid_argument("The provided Images format does not match the assert img format. ");
+            UtilityFunctions::push_error("The provided Images format does not match the assert img format.");
         }
     }
 
@@ -26,7 +26,8 @@ template <typename T> struct ImageMatrix {
 
     const uint8_t* bytes_ptr() const {
         if (image.is_null()) {
-            throw std::runtime_error("Cannot get pointer from null image");
+            UtilityFunctions::push_error("Cannot get pointer from null image");
+            throw std::runtime_error("Cannot get pointer from null image"); // crash
         }
         return image->ptr();
     }
@@ -40,7 +41,9 @@ template <typename T> struct ImageMatrix {
             case Image::FORMAT_R8: return 1;
             case Image::FORMAT_RGB8: return 3;
             case Image::FORMAT_RGBA8: return 4;
-            default: throw std::runtime_error("Unsupported image format");
+            default: 
+                UtilityFunctions::push_error("Unsupported image format");
+                return 1;
         }
     }
 };

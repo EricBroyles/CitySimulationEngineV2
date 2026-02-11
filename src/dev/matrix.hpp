@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <unordered_set> 
-// #include <stdexcept>
 #include <godot_cpp/classes/image.hpp>
 #include "cell.hpp"
 #include "terrain_type.hpp"

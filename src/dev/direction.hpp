@@ -1,6 +1,6 @@
 #pragma once
-// #include <stdexcept>
 #include <godot_cpp/classes/image.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include "vec.hpp"
 #include "cell.hpp"
 
@@ -46,7 +46,6 @@ private:
     constexpr void validate() const {
         if (count() > 1) { 
             UtilityFunctions::push_error(vformat("Direction must be None or Solo: %d", count()));
-            // throw std::invalid_argument("Direction must be None or Solo"); //crashes godot
         }
     }
 public:

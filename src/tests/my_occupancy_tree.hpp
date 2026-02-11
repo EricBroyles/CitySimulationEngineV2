@@ -3,35 +3,7 @@
 #include "../dev/occupancy_tree.hpp"
 #include "my_input_package.hpp"
 
-// create a base world with TT of building and parking mixed in width = 1,2,4,8,16,...
-// I need a printer
 using namespace godot;
-
-/*
-
-{} is parking
-[] is building
-XX is none
-
-example:
-8x8
-[] []
-
-ex
-4x4
-
-2x2
-
-All Parking vs all Building
-vs half parking and half building
-
-
-*/
-
-struct Result {
-    OccupancyTree tree;
-    bool pass;
-};
 
 struct MyOccupancyTree {
     static constexpr uint32_t W2 = 2;

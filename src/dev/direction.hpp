@@ -43,7 +43,12 @@ struct Direction {
 
 struct SoloDirection: Direction {
 private: 
-    constexpr void validate() const {if (count() > 1) { throw std::invalid_argument("Direction must be None or Solo"); }}
+    constexpr void validate() const {
+        if (count() > 1) { 
+            UtilityFunctions::push_error(vformat("Direction must be None or Solo: %d", count()));
+            // throw std::invalid_argument("Direction must be None or Solo"); //crashes godot
+        }
+    }
 public:
     constexpr SoloDirection(): Direction(NONE) {} 
     constexpr SoloDirection(uint8_t v): Direction(v) { validate(); } 

@@ -785,35 +785,39 @@ void Tester::terrain_type() const {
         print_line(vformat("[Pass: %s] TerrainType(BARRIER) creates BARRIER", pass)); if (pass) passed++; total++;
     }
 
-    {
-        bool pass = false;
-        try {
-            TerrainType invalid(-1);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] TerrainType(-1) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     TT(100); //this passes if an error is thrown inside godot.
+    // }
 
-    {
-        bool pass = false;
-        try {
-            TerrainType invalid(TerrainType::MAX);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] TerrainType(MAX) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     bool pass = false;
+    //     try {
+    //         TerrainType invalid(-1);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] TerrainType(-1) throws exception", pass)); if (pass) passed++; total++;
+    // }
 
-    {
-        bool pass = false;
-        try {
-            TerrainType invalid(100);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] TerrainType(100) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     bool pass = false;
+    //     try {
+    //         TerrainType invalid(TerrainType::MAX);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] TerrainType(MAX) throws exception", pass)); if (pass) passed++; total++;
+    // }
+
+    // {
+    //     bool pass = false;
+    //     try {
+    //         TerrainType invalid(100);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] TerrainType(100) throws exception", pass)); if (pass) passed++; total++;
+    // }
 
     print_line(vformat("@Results: %d/%d", passed, total));
     print_line("==================================\n");
@@ -853,25 +857,29 @@ void Tester::terrain_mod() const {
         print_line(vformat("[Pass: %s] TerrainMod(LANE_DIVIDER)", pass)); if (pass) passed++; total++;
     }
 
-    {
-        bool pass = false;
-        try {
-            TerrainMod invalid(TerrainMod::MAX);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] TerrainMod(MAX) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     TM tm = TM(TM::MAX); //this passes if it throws an error inside godot.
+    // }
 
-    {
-        bool pass = false;
-        try {
-            TerrainMod invalid(100);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] TerrainMod(100) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     bool pass = false;
+    //     try {
+    //         TerrainMod invalid(TerrainMod::MAX);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] TerrainMod(MAX) throws exception", pass)); if (pass) passed++; total++;
+    // }
+
+    // {
+    //     bool pass = false;
+    //     try {
+    //         TerrainMod invalid(100);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] TerrainMod(100) throws exception", pass)); if (pass) passed++; total++;
+    // }
 
     print_line(vformat("@Results: %d/%d", passed, total));
     print_line("==================================\n");
@@ -1125,36 +1133,40 @@ void Tester::direction() const {
         print_line(vformat("[Pass: %s] SoloDirection(solo_source) is valid", pass)); if (pass) passed++; total++;
     }
 
-    {
-        bool pass = false;
-        try {
-            SoloDirection invalid(Direction::E | Direction::N);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] SoloDirection(E|N) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     SDir s = SDir(Dir::ALL); //this passes if it pushes error to godot.
+    // }
 
-    {
-        bool pass = false;
-        try {
-            SoloDirection invalid(Direction::ALL);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] SoloDirection(ALL) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     bool pass = false;
+    //     try {
+    //         SoloDirection invalid(Direction::E | Direction::N);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] SoloDirection(E|N) throws exception", pass)); if (pass) passed++; total++;
+    // }
 
-    {
-        bool pass = false;
-        try {
-            Direction multi(Direction::E | Direction::W);
-            SoloDirection invalid(multi);
-        } catch (const std::invalid_argument& e) {
-            pass = true;
-        }
-        print_line(vformat("[Pass: %s] SoloDirection(Direction with multiple bits) throws exception", pass)); if (pass) passed++; total++;
-    }
+    // {
+    //     bool pass = false;
+    //     try {
+    //         SoloDirection invalid(Direction::ALL);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] SoloDirection(ALL) throws exception", pass)); if (pass) passed++; total++;
+    // }
+
+    // {
+    //     bool pass = false;
+    //     try {
+    //         Direction multi(Direction::E | Direction::W);
+    //         SoloDirection invalid(multi);
+    //     } catch (const std::invalid_argument& e) {
+    //         pass = true;
+    //     }
+    //     print_line(vformat("[Pass: %s] SoloDirection(Direction with multiple bits) throws exception", pass)); if (pass) passed++; total++;
+    // }
 
     {
         bool pass = (SoloDirection(Direction::E).to_vec2i() == Vec2i(1,0));

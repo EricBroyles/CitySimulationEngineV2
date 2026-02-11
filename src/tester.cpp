@@ -28,14 +28,107 @@ void Tester::_bind_methods() {
 
 void Tester::occupancy_tree() const {
     print_line("==================================");
-    print_line("@TEST: occupancy_tree"); int passed = 0, total = 0;
+    print_line("@TEST: occupancy_tree"); 
+    int passed = 0, total = 0;
+
+    // ======================
+    // 8x8
+    // ======================
+
     {
         OccupancyTree tree = MyOccupancyTree::create(8,8,TT(TT::PARKING));
-        MyOccupancyTree::print(tree);
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W8_FULL_PARKING;
+        if (pass) passed++; total++;
     }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(8,8,TT(TT::BUILDING));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W8_FULL_BUILDING;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(8,8,TT(TT::NONE));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W8_NONE;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(8,8,{TT(TT::PARKING), TT(TT::BUILDING)});
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W8_HALF_P_B;
+        if (pass) passed++; total++;
+    }
+
+    // ======================
+    // 4x4
+    // ======================
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(4,4,TT(TT::PARKING));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W4_FULL_PARKING;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(4,4,TT(TT::BUILDING));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W4_FULL_BUILDING;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(4,4,TT(TT::NONE));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W4_NONE;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(4,4,{TT(TT::PARKING), TT(TT::BUILDING)});
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W4_HALF_P_B;
+        if (pass) passed++; total++;
+    }
+
+    // ======================
+    // 2x2
+    // ======================
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(2,2,TT(TT::PARKING));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W2_FULL_PARKING;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(2,2,TT(TT::BUILDING));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W2_FULL_BUILDING;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(2,2,TT(TT::NONE));
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W2_NONE;
+        if (pass) passed++; total++;
+    }
+
+    {
+        OccupancyTree tree = MyOccupancyTree::create(2,2,{TT(TT::PARKING), TT(TT::BUILDING)});
+        MyOccupancyTree::print(tree); 
+        bool pass = tree == MyOccupancyTree::TREE_W2_HALF_P_B;
+        if (pass) passed++; total++;
+    }
+
     print_line(vformat("@Results: %d/%d", passed, total));
     print_line("==================================\n");
-
 }
 
 void Tester::idx() const {

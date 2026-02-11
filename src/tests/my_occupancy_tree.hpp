@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "../dev/occupancy_tree.hpp"
 #include "my_input_package.hpp"
 
@@ -21,6 +22,9 @@ ex
 
 2x2
 
+All Parking vs all Building
+vs half parking and half building
+
 
 */
 
@@ -30,6 +34,40 @@ struct Result {
 };
 
 struct MyOccupancyTree {
+    static constexpr uint32_t W2 = 2;
+    static constexpr uint32_t DEPTH_W2 = 1-1;
+    static constexpr int COUNT_W2 = 1*1;
+
+    static constexpr uint32_t W4 = 4;
+    static constexpr uint32_t DEPTH_W4 = 2-1;
+    static constexpr int COUNT_W4 = 1*1+2*2;
+
+    static constexpr uint32_t W8 = 8;
+    static constexpr uint32_t DEPTH_W8 = 3-1;
+    static constexpr int COUNT_W8 = 1*1+2*2+4*4;
+
+    inline static const std::vector<uint32_t> NONE_TREE_W2 = {0};
+    inline static const std::vector<uint32_t> NONE_TREE_W4 = {0, 0, 0, 0, 0};
+    inline static const std::vector<uint32_t> NONE_TREE_W8 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    inline static const std::vector<uint32_t> FULL_TREE_W2 = {4};
+    inline static const std::vector<uint32_t> FULL_TREE_W4 = {16, 16/4, 16/4, 16/4, 16/4};
+    inline static const std::vector<uint32_t> FULL_TREE_W8 = {64, 64/4, 64/4, 64/4, 64/4, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16, 64/16};
+    inline static const std::vector<uint32_t> HALF_TREE_W2 = {2};
+    inline static const std::vector<uint32_t> HALF_TREE_W4 = {8, 8/4, 8/4, 8/4, 8/4};
+    inline static const std::vector<uint32_t> HALF_TREE_W8 = {32, 32/4, 32/4, 32/4, 32/4, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16, 32/16};
+
+    inline static OccupancyTree TREE_W2_NONE = OccupancyTree(W2, DEPTH_W2, COUNT_W2, NONE_TREE_W2, NONE_TREE_W2);
+    inline static OccupancyTree TREE_W4_NONE = OccupancyTree(W4, DEPTH_W4, COUNT_W4, NONE_TREE_W4, NONE_TREE_W4);
+    inline static OccupancyTree TREE_W8_NONE = OccupancyTree(W8, DEPTH_W8, COUNT_W8, NONE_TREE_W8, NONE_TREE_W8);
+    inline static OccupancyTree TREE_W2_FULL_PARKING = OccupancyTree(W2, DEPTH_W2, COUNT_W2, FULL_TREE_W2, NONE_TREE_W2);
+    inline static OccupancyTree TREE_W4_FULL_PARKING = OccupancyTree(W4, DEPTH_W4, COUNT_W4, FULL_TREE_W4, NONE_TREE_W4);
+    inline static OccupancyTree TREE_W8_FULL_PARKING = OccupancyTree(W8, DEPTH_W8, COUNT_W8, FULL_TREE_W8, NONE_TREE_W8);
+    inline static OccupancyTree TREE_W2_FULL_BUILDING = OccupancyTree(W2, DEPTH_W2, COUNT_W2, NONE_TREE_W2, FULL_TREE_W2);
+    inline static OccupancyTree TREE_W4_FULL_BUILDING = OccupancyTree(W4, DEPTH_W4, COUNT_W4, NONE_TREE_W4, FULL_TREE_W4);
+    inline static OccupancyTree TREE_W8_FULL_BUILDING = OccupancyTree(W8, DEPTH_W8, COUNT_W8, NONE_TREE_W8, FULL_TREE_W8);
+    inline static OccupancyTree TREE_W2_HALF_P_B = OccupancyTree(W2, DEPTH_W2, COUNT_W2, HALF_TREE_W2, HALF_TREE_W2);
+    inline static OccupancyTree TREE_W4_HALF_P_B = OccupancyTree(W4, DEPTH_W4, COUNT_W4, HALF_TREE_W4, HALF_TREE_W4);
+    inline static OccupancyTree TREE_W8_HALF_P_B = OccupancyTree(W8, DEPTH_W8, COUNT_W8, HALF_TREE_W8, HALF_TREE_W8);
 
     static OccupancyTree create(int cols, int rows, TT fill_tt) {
         Ref<InputPackage> input = MyInputPackage::create(cols, rows, fill_tt, TM(), Dir(), MPH());
@@ -37,7 +75,11 @@ struct MyOccupancyTree {
         return OccupancyTree(base);
     }
 
-
+    static OccupancyTree create(int cols, int rows, const std::vector<TT>& list_tt) {
+        Ref<InputPackage> input = MyInputPackage::create(cols, rows, list_tt, {}, {}, {});
+        BaseWorld base = BaseWorld(input);
+        return OccupancyTree(base);
+    }
 
     static void print(const OccupancyTree& tree) {
         const uint32_t width = tree.get_width();

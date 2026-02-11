@@ -176,7 +176,7 @@ public:
         set_tree_after_base();
     }
 
-    OccupancyTree(uint32_t width, uint32_t depth, uint32_t count, uint32_t parking_tree, uint32_t building_tree):
+    OccupancyTree(uint32_t width, uint32_t depth, uint32_t count, const std::vector<uint32_t>& parking_tree, const std::vector<uint32_t>& building_tree):
         width(width),
         depth(depth),
         count(count),
@@ -206,10 +206,10 @@ public:
 
     bool operator==(const OccupancyTree& other) const {
         return 
-            width == other.width && 
-            depth == other.depth &&
-            count == other.count &&
-            parking_tree  == other.parking_tree &&
-            building_tree == other.building_tree;
+            width == other.get_width() && 
+            depth == other.get_depth() &&
+            count == other.get_count() &&
+            parking_tree  == other.get_parking_tree() &&
+            building_tree == other.get_building_tree();
     }
 };

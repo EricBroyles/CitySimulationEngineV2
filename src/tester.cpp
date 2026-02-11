@@ -299,7 +299,7 @@ void Tester::world() const {
     print_line("@TEST: construct_cm"); int passed = 0, total = 0;
 
     {
-        Ref<InputPackage> input = MyInputPackage::create(100,100,TT(),TM(),Dir(),MPH());
+        Ref<InputPackage> input = MyInputPackage::create(64,64,TT(),TM(),Dir(),MPH());
         World world = World(input);
         bool pass = world.avg_walk_speed == Speed(InputPackage::DEFAULT_AVG_WALK_MPH, world.sec_per_step, world.feet_per_cell) 
                     && world.avg_drive_speed == Speed(InputPackage::DEFAULT_AVG_DRIVE_MPH, world.sec_per_step, world.feet_per_cell);
@@ -309,7 +309,7 @@ void Tester::world() const {
     {
         MPH NEW_WALK_MPH = MPH(8); 
         MPH NEW_DRIVE_MPH = MPH(12);
-        Ref<InputPackage> input = MyInputPackage::create(100,100,TT(),TM(),Dir(),MPH());
+        Ref<InputPackage> input = MyInputPackage::create(64,64,TT(),TM(),Dir(),MPH());
         input->override_avg_mph(NEW_WALK_MPH.val, NEW_DRIVE_MPH.val);
         World world = World(input);
         bool pass = world.avg_walk_speed == Speed(NEW_WALK_MPH, world.sec_per_step, world.feet_per_cell) 

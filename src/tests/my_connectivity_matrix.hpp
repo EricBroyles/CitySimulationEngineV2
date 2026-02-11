@@ -31,14 +31,24 @@ struct MyConnectivityMatrix {
         CMID(4), CMID(0), CMID(1), CMID(2),
         CMID(8), CMID(4), CMID(0), CMID(1),
         CMID(12), CMID(8), CMID(4), CMID(0)}};
-    inline static Matrix<CMID> W_CONNECTION{5,3,{
-        CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(0),
-        CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(0),
-        CMID(-1), CMID(0), CMID(-1), CMID(0), CMID(-1)}}; 
-    inline static Matrix<CMID> BOTTOM_LEAK{7,3,{
-        CMID(0), CMID(-1), CMID(2),  CMID(-1), CMID(0), CMID(0), CMID(0),
-        CMID(0), CMID(-1), CMID(-1), CMID(-1), CMID(0), CMID(0), CMID(0),
-        CMID(0), CMID(0),  CMID(0),  CMID(0),  CMID(0), CMID(0), CMID(0)}}; 
+    inline static Matrix<CMID> W_CONNECTION{8,8,{
+        CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(-1), CMID(-1), 
+        CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(-1), CMID(-1), 
+        CMID(-1), CMID(0), CMID(-1), CMID(0), CMID(-1), CMID(-1), CMID(-1), CMID(-1), 
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1)}}; 
+    inline static Matrix<CMID> BOTTOM_LEAK{8,8,{
+        CMID(0), CMID(-1), CMID(2),  CMID(-1), CMID(0), CMID(0), CMID(0), CMID(-1),
+        CMID(0), CMID(-1), CMID(-1), CMID(-1), CMID(0), CMID(0), CMID(0), CMID(-1),
+        CMID(0), CMID(0),  CMID(0),  CMID(0),  CMID(0), CMID(0), CMID(0), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1),
+        CMID(-1), CMID(-1),  CMID(-1),  CMID(-1),  CMID(-1), CMID(-1), CMID(-1), CMID(-1)}}; 
 
     static void display(const CM& cm) {
         print_line("Walk: ");
@@ -77,11 +87,16 @@ struct MyConnectivityMatrix {
         constexpr TT P = TT(TT::PARKING); 
         constexpr TT B = TT(TT::BARRIER);
         const std::vector<TT> LIST_TT{
-            P, B, P, B, P,
-            P, B, P, B, P,
-            B, P, B, P, B}; // Must match size of W_CONNECTION or will crash silently.
+            P, B, P, B, P, B, B, B,
+            P, B, P, B, P, B, B, B,
+            B, P, B, P, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B}; // Must match size of W_CONNECTION or will crash silently.
         const std::vector<Dir> LIST_DIR{fill_dir};
-        CM cm = create(5, 3, LIST_TT, LIST_DIR, display_time);
+        CM cm = create(8, 8, LIST_TT, LIST_DIR, display_time);
         return cm;
     }
 
@@ -89,11 +104,16 @@ struct MyConnectivityMatrix {
         constexpr TT P = TT(TT::PARKING); 
         constexpr TT B = TT(TT::BARRIER);
         const std::vector<TT> LIST_TT{
-            P, B, P, B, P, P, P,
-            P, B, B, B, P, P, P,
-            P, P, P, P, P, P, P}; // Must match size of BOTTOM_LEAK or will crash silently.
+            P, B, P, B, P, P, P, B,
+            P, B, B, B, P, P, P, B,
+            P, P, P, P, P, P, P, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,
+            B, B, B, B, B, B, B, B,}; // Must match size of BOTTOM_LEAK or will crash silently.
         const std::vector<Dir> LIST_DIR{fill_dir};
-        CM cm = create(7, 3, LIST_TT, LIST_DIR, display_time);
+        CM cm = create(8, 8, LIST_TT, LIST_DIR, display_time);
         return cm;   
     }
 };
